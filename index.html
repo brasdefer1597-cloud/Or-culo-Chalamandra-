@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oráculo Chalamandra - Decodifica tu decisión</title>
+    <style>
+        :root {
+            --magenta: #E6007E;
+            --verde: #2ECC71;
+            --negro: #0B0B0E;
+            --blanco: #FFFFFF;
+            --gris: #f5f5f5;
+            --sombra: 0 4px 12px rgba(0,0,0,0.1);
+            --radio: 10px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--gris);
+            color: var(--negro);
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--magenta);
+        }
+        
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            color: var(--magenta);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: var(--negro);
+        }
+        
+        .card {
+            background-color: var(--blanco);
+            padding: 30px;
+            border-radius: var(--radio);
+            box-shadow: var(--sombra);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        select, textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--magenta);
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .btn {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--magenta);
+            color: var(--blanco);
+        }
+        
+        .btn-primary:hover {
+            background-color: #c4006a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--verde);
+            color: var(--negro);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #25b362;
+            transform: translateY(-2px);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .questions-block {
+            margin-bottom: 20px;
+        }
+        
+        .hat-title {
+            font-weight: 700;
+            color: var(--magenta);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hat-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        
+        .questions-list {
+            margin-left: 20px;
+        }
+        
+        .questions-list li {
+            margin-bottom: 8px;
+        }
+        
+        .ritual-section {
+            background-color: var(--gris);
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+            border-left: 4px solid var(--verde);
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--negro);
+            color: var(--blanco);
+            border-radius: var(--radio);
+        }
+        
+        .cta-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--blanco);
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .mini-ritual {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--negro);
+            color: var(--blanco);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Oráculo Chalamandra</h1>
+            <p class="subtitle">Del caos al código: decodifica tu decisión</p>
+        </header>
+        
+        <section class="card">
+            <h2>Elige tu método y contexto</h2>
+            <form id="oracle-form">
+                <div class="form-group">
+                    <label for="method">Método de pensamiento:</label>
+                    <select id="method" required>
+                        <option value="">Selecciona un método</option>
+                        <option value="6 Sombreros">6 Sombreros (De Bono)</option>
+                        <option value="5 Porqués">5 Porqués</option>
+                        <option value="Disney">Disney (Soñador/Realista/Crítico)</option>
+                        <option value="Paul-Elder">Paul-Elder (pensamiento crítico)</option>
+                        <option value="Covey">Covey (Urgente/Importante)</option>
+                        <option value="OODA">OODA (Observe-Orient-Decide-Act)</option>
+                        <option value="Árbol de decisiones">Árbol de decisiones</option>
+                        <option value="Cynefin">Cynefin (simple/complicado/complex/caótico)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="context">Contexto de aplicación:</label>
+                    <select id="context" required>
+                        <option value="">Selecciona un contexto</option>
+                        <option value="Decisión laboral">Decisión laboral</option>
+                        <option value="Relación de pareja">Relación de pareja</option>
+                        <option value="Parentalidad">Parentalidad</option>
+                        <option value="Ciberseguridad">Ciberseguridad (incidente o riesgo)</option>
+                        <option value="Cliente freelancer">Cliente freelancer</option>
+                        <option value="Autocuidado/bienestar">Autocuidado/bienestar</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="situation">Describe tu situación en 1-2 líneas:</label>
+                    <textarea id="situation" placeholder="Ejemplo: Estoy considerando cambiar de trabajo pero tengo miedo al cambio..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Generar preguntas personalizadas</button>
+            </form>
+        </section>
+        
+        <section class="card hidden" id="result-section">
+            <h2>Tus preguntas personalizadas</h2>
+            <div id="questions-output"></div>
+            
+            <div class="ritual-section">
+                <h3>Mini-ritual SRAP (Sincronización Ritmo-Acción Presente)</h3>
+                <ol>
+                    <li><strong>Pausa:</strong> Respira 4-6-4 (inhalar 4s, sostener 6s, exhalar 4s)</li>
+                    <li><strong>Ritmo:</strong> Escanea tu cuerpo y nota dónde sientes tensión o calma</li>
+                    <li><strong>Acción:</strong> Responde la primera pregunta que más resuene</li>
+                    <li><strong>Presente:</strong> Anota una micro-acción para las próximas 72h</li>
+                </ol>
+            </div>
+        </section>
+        
+        <section class="cta-section hidden" id="cta-section">
+            <h3 class="cta-title">¿Quieres guardar este resultado y recibir más herramientas?</h3>
+            <div class="cta-buttons">
+                <button class="btn btn-secondary" id="email-cta">Enviar resultado a tu email</button>
+                <button class="btn btn-secondary" id="subscribe-cta">Suscríbete a Códigos Chalamandra</button>
+            </div>
+            
+            <form class="hidden" id="email-form">
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <input type="email" id="user-email" placeholder="Tu email" required>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        </section>
+        
+        <footer>
+            <p>© 2023 Chalamandra Magistral | Storytelling + frameworks para decidir mejor</p>
+            <p><a href="#" style="color: #666;">Política de privacidad</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // CONSTANTES Y CONFIGURACIÓN
+        const HAT_COLORS = {
+            "Blanco": "#FFFFFF",
+            "Rojo": "#FF0000", 
+            "Negro": "#000000",
+            "Amarillo": "#FFFF00",
+            "Verde": "#00FF00",
+            "Azul": "#0000FF"
+        };
+
+        const QUESTION_BANK = {
+            "6 Sombreros": {
+                "Blanco": [
+                    "¿Qué hechos verificables tengo sobre [contexto] sin adjetivos?",
+                    "¿Qué información falta medir o validar?",
+                    "¿Qué datos objetivos respaldan o contradicen mi percepción?"
+                ],
+                "Rojo": [
+                    "¿Qué siento ahora mismo sobre [contexto]?",
+                    "¿Qué emoción podría estar protegiéndome o bloqueándome?",
+                    "Si mi intuición tuviera voz, ¿qué me diría?"
+                ],
+                "Negro": [
+                    "¿Cuál es la peor consecuencia plausible y qué probabilidad tiene?",
+                    "¿Qué señal roja podría estar ignorando?",
+                    "¿Qué obstáculo es más probable que ocurra?"
+                ],
+                "Amarillo": [
+                    "¿Qué fortalezas ya existen aquí que no debo romper?",
+                    "¿Qué ventaja puedo amplificar?",
+                    "¿Qué oportunidad se esconde en esta situación?"
+                ],
+                "Verde": [
+                    "¿Qué 3 opciones no obvias podrían mejorar [contexto]?",
+                    "Si tuviera recursos ilimitados, ¿qué experimentaría?",
+                    "¿Qué solución híbrida podría combinar lo mejor de diferentes enfoques?"
+                ],
+                "Azul": [
+                    "¿Cuál es el criterio de éxito en una frase?",
+                    "¿Cuál es el siguiente paso con fecha concreta?",
+                    "¿Cómo mediré el progreso en 1 semana?"
+                ]
+            },
+            "5 Porqués": {
+                "Pregunta 1": ["¿Por qué ocurre [contexto]? (Causa inicial)"],
+                "Pregunta 2": ["¿Por qué la causa anterior es cierta? (Profundización)"],
+                "Pregunta 3": ["¿Por qué persiste esa condición? (Patrón)"],
+                "Pregunta 4": ["¿Por qué no se ha solucionado antes? (Sistema)"],
+                "Pregunta 5": ["¿Por qué esto es importante para mí? (Significado)"],
+                "Acción": ["¿Qué acción atacará la causa raíz esta semana?"]
+            },
+            "Disney": {
+                "Soñador": [
+                    "Si todo saliera perfectamente bien en [contexto], ¿qué vería/oiría/sentiría?",
+                    "Sin limitaciones, ¿cuál sería el resultado ideal?",
+                    "¿Qué versión de mí mismo/a estaría viviendo en ese escenario?"
+                ],
+                "Realista": [
+                    "¿Qué recursos reales tengo disponibles ahora mismo?",
+                    "¿Qué obstáculo concreto puedo eliminar hoy?",
+                    "¿Qué pasos prácticos me acercan 1% más a mi visión?"
+                ],
+                "Crítico": [
+                    "¿Qué fallaría primero en mi plan?",
+                    "¿Cómo puedo contener ese riesgo de manera barata?",
+                    "¿Qué objeciones razonables podrían surgir?"
+                ]
+            },
+            "Paul-Elder": {
+                "Propósito": [
+                    "¿Qué intento lograr realmente con [contexto]?",
+                    "¿Cuál es mi objetivo principal y secundario?"
+                ],
+                "Información": [
+                    "¿Qué evidencia sólida apoya mi postura?",
+                    "¿Qué datos contradicen o matizan mi perspectiva?"
+                ],
+                "Inferencias": [
+                    "¿Qué conclusiones estoy asumiendo sin verificación?",
+                    "¿Qué conexiones doy por sentadas?"
+                ],
+                "Puntos de vista": [
+                    "¿Qué perspectiva no he considerado?",
+                    "¿Cómo vería esta situación alguien con valores opuestos?"
+                ],
+                "Implicaciones": [
+                    "Si decido X, ¿qué efectos de segundo orden podrían surgir?",
+                    "¿Qué puertas cierra y qué puertas abre esta decisión?"
+                ]
+            },
+            "Covey": {
+                "Identificación": ["Lista 5 tareas clave relacionadas con [contexto]"],
+                "Clasificación": [
+                    "¿Cuáles son urgentes e importantes? (Cuadrante I)",
+                    "¿Cuáles son importantes pero no urgentes? (Cuadrante II)",
+                    "¿Cuáles son urgentes pero no importantes? (Cuadrante III)",
+                    "¿Cuáles no son urgentes ni importantes? (Cuadrante IV)"
+                ],
+                "Acción": [
+                    "¿Qué tarea del Cuadrante II debo agendar hoy?",
+                    "¿Cómo puedo reducir el tiempo en Cuadrantes III y IV?"
+                ]
+            },
+            "OODA": {
+                "Observe": [
+                    "¿Qué señales recientes han cambiado el mapa de [contexto]?",
+                    "¿Qué datos nuevos han emergido?"
+                ],
+                "Orient": [
+                    "¿Qué sesgo podría estar distorsionando mi lectura?",
+                    "¿Qué modelos mentales estoy aplicando?"
+                ],
+                "Decide": [
+                    "¿Qué decisión reversible puedo tomar ahora?",
+                    "¿Cuál es la apuesta de menor riesgo?"
+                ],
+                "Act": [
+                    "¿Qué trigger me dirá si debo cambiar de curso?",
+                    "¿Qué acción inmediata prueba mi hipótesis?"
+                ]
+            },
+            "Árbol de decisiones": {
+                "Opción A": [
+                    "Si elijo [Opción A], ¿qué beneficio espero?",
+                    "¿Qué consecuencia negativa es posible?",
+                    "¿Qué probabilidad tiene cada escenario?"
+                ],
+                "Opción B": [
+                    "Si elijo [Opción B], ¿qué beneficio espero?",
+                    "¿Qué consecuencia negativa es posible?",
+                    "¿Qué probabilidad tiene cada escenario?"
+                ],
+                "Evaluación": [
+                    "¿Eliges por expectativa de valor o por riesgo máximo aceptable?",
+                    "¿Qué opción se alinea mejor con tus valores a largo plazo?"
+                ]
+            },
+            "Cynefin": {
+                "Diagnóstico": ["¿Es [contexto] simple, complicado, complejo o caótico?"],
+                "Simple": ["Aplica mejor práctica conocida"],
+                "Complicado": ["Consulta a un experto o analiza a fondo"],
+                "Complejo": ["Experimenta de manera segura y observa resultados"],
+                "Caótico": ["Actúa inmediatamente para estabilizar, luego busca patrones"]
+            }
+        };
+
+        // ELEMENTOS DOM - Cacheado para mejor performance
+        const DOM = {
+            form: document.getElementById('oracle-form'),
+            method: document.getElementById('method'),
+            context: document.getElementById('context'),
+            situation: document.getElementById('situation'),
+            resultSection: document.getElementById('result-section'),
+            questionsOutput: document.getElementById('questions-output'),
+            ctaSection: document.getElementById('cta-section'),
+            emailCta: document.getElementById('email-cta'),
+            subscribeCta: document.getElementById('subscribe-cta'),
+            emailForm: document.getElementById('email-form'),
+            userEmail: document.getElementById('user-email')
+        };
+
+        // UTILIDADES
+        const utils = {
+            show(element) {
+                element.classList.remove('hidden');
+            },
+            
+            hide(element) {
+                element.classList.add('hidden');
+            },
+            
+            validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            },
+            
+            personalizeQuestion(question, context) {
+                return question.replace(/\[contexto\]/g, context);
+            },
+            
+            scrollToElement(element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+
+        // GENERADOR DE PREGUNTAS
+        const questionGenerator = {
+            generate(method, context, situation) {
+                const methodData = QUESTION_BANK[method];
+                if (!methodData) {
+                    throw new Error('Método no encontrado');
+                }
+                
+                let outputHTML = '';
+                
+                // Generar HTML para cada categoría de preguntas
+                Object.entries(methodData).forEach(([category, questions]) => {
+                    outputHTML += this.createQuestionBlock(category, questions, situation, method);
+                });
+                
+                return outputHTML;
+            },
+            
+            createQuestionBlock(category, questions, situation, method) {
+                const isSixHats = method === "6 Sombreros";
+                const color = isSixHats ? HAT_COLORS[category] : null;
+                
+                return `
+                    <div class="questions-block">
+                        <div class="hat-title">
+                            ${color ? `<span class="hat-color" style="background-color: ${color};"></span>` : ''}
+                            <span>${category}</span>
+                        </div>
+                        <ul class="questions-list">
+                            ${questions.map(question => 
+                                `<li>${utils.personalizeQuestion(question, situation)}</li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+        };
+
+        // MANEJADORES DE EVENTOS
+        const eventHandlers = {
+            handleFormSubmit(e) {
+                e.preventDefault();
+                
+                const method = DOM.method.value;
+                const context = DOM.context.value;
+                const situation = DOM.situation.value;
+                
+                if (!method || !context || !situation) {
+                    alert('Por favor, completa todos los campos');
+                    return;
+                }
+                
+                try {
+                    const questionsHTML = questionGenerator.generate(method, context, situation);
+                    DOM.questionsOutput.innerHTML = questionsHTML;
+                    
+                    utils.show(DOM.resultSection);
+                    utils.show(DOM.ctaSection);
+                    
+                    utils.scrollToElement(DOM.resultSection);
+                    
+                    // Tracking (simulado)
+                    console.log('Oráculo utilizado:', { method, context });
+                    
+                } catch (error) {
+                    console.error('Error generando preguntas:', error);
+                    alert('Error al generar las preguntas. Intenta nuevamente.');
+                }
+            },
+            
+            handleEmailCta() {
+                utils.show(DOM.emailForm);
+                DOM.userEmail.focus();
+            },
+            
+            handleSubscribeCta() {
+                window.open('https://chalamandra.substack.com', '_blank');
+            },
+            
+            handleEmailSubmit(e) {
+                e.preventDefault();
+                
+                const email = DOM.userEmail.value.trim();
+                
+                if (!utils.validateEmail(email)) {
+                    alert('Por favor, introduce un email válido');
+                    return;
+                }
+                
+                // Simular envío de email
+                alert(`¡Resultados enviados a ${email}! Revisa tu bandeja de entrada.`);
+                utils.hide(DOM.emailForm);
+                DOM.userEmail.value = '';
+                
+                // Simular tag en CRM
+                const method = DOM.method.value;
+                const context = DOM.context.value;
+                console.log(`Lead capturado: ${email} - Tags: ${method}, ${context}, MVP_oraculo`);
+            }
+        };
+
+        // INICIALIZACIÓN
+        function init() {
+            // Event Listeners
+            DOM.form.addEventListener('submit', eventHandlers.handleFormSubmit);
+            DOM.emailCta.addEventListener('click', eventHandlers.handleEmailCta);
+            DOM.subscribeCta.addEventListener('click', eventHandlers.handleSubscribeCta);
+            DOM.emailForm.addEventListener('submit', eventHandlers.handleEmailSubmit);
+            
+            console.log('Oráculo Chalamandra inicializado correctamente');
+        }
+
+        // Iniciar aplicación cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
