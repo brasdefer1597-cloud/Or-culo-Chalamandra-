@@ -99,10 +99,8 @@ const eventHandlers = {
             utils.scrollToElement(DOM.resultSection);
 
             // Tracking (simulado)
-            console.log('Oráculo utilizado:', { method, context });
 
         } catch (error) {
-            console.error('Error generando preguntas:', error);
             alert('Error al generar las preguntas. Intenta nuevamente.');
         }
     },
@@ -134,7 +132,6 @@ const eventHandlers = {
         // Simular tag en CRM
         const method = DOM.method.value;
         const context = DOM.context.value;
-        console.log(`Lead capturado: ${email} - Tags: ${method}, ${context}, MVP_oraculo`);
     }
 };
 
@@ -145,8 +142,6 @@ function init() {
     DOM.emailCta.addEventListener('click', eventHandlers.handleEmailCta);
     DOM.subscribeCta.addEventListener('click', eventHandlers.handleSubscribeCta);
     DOM.emailForm.addEventListener('submit', eventHandlers.handleEmailSubmit);
-
-    console.log('Oráculo Chalamandra inicializado correctamente');
 }
 
 // Iniciar aplicación cuando el DOM esté listo
