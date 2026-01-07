@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oráculo Chalamandra - Decodifica tu decisión</title>
+    <title>Oráculo Chalamandra - DEMO</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Oráculo Chalamandra</h1>
+            <h1>Oráculo Chalamandra [DEMO]</h1>
             <p class="subtitle">Del caos al código: decodifica tu decisión</p>
         </header>
-        
+
         <section class="card">
             <h2>Elige tu método y contexto</h2>
             <form id="oracle-form">
@@ -31,7 +31,7 @@
                         <option value="Cynefin">Cynefin (simple/complicado/complex/caótico)</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="context">Contexto de aplicación:</label>
                     <select id="context" required>
@@ -44,20 +44,20 @@
                         <option value="Autocuidado/bienestar">Autocuidado/bienestar</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="situation">Describe tu situación en 1-2 líneas:</label>
                     <textarea id="situation" placeholder="Ejemplo: Estoy considerando cambiar de trabajo pero tengo miedo al cambio..." required></textarea>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary">Generar preguntas personalizadas</button>
             </form>
         </section>
-        
+
         <section class="card hidden" id="result-section">
             <h2>Tus preguntas personalizadas</h2>
             <div id="questions-output"></div>
-            
+
             <div class="ritual-section">
                 <h3>Mini-ritual SRAP (Sincronización Ritmo-Acción Presente)</h3>
                 <ol>
@@ -68,14 +68,15 @@
                 </ol>
             </div>
         </section>
-        
+
+        <!-- CTA Section is hidden/removed or modified for Demo if needed, but keeping it same for now as 'reusing code' -->
         <section class="cta-section hidden" id="cta-section">
             <h3 class="cta-title">¿Quieres guardar este resultado y recibir más herramientas?</h3>
             <div class="cta-buttons">
                 <button class="btn btn-secondary" id="email-cta">Enviar resultado a tu email</button>
                 <button class="btn btn-secondary" id="subscribe-cta">Suscríbete a Códigos Chalamandra</button>
             </div>
-            
+
             <form class="hidden" id="email-form">
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <input type="email" id="user-email" placeholder="Tu email" required>
@@ -83,7 +84,7 @@
                 </div>
             </form>
         </section>
-        
+
         <footer>
             <p>© 2023 Chalamandra Magistral | Storytelling + frameworks para decidir mejor</p>
             <p><a href="#" style="color: #666;">Política de privacidad</a></p>
