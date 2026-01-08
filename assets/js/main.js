@@ -130,8 +130,6 @@ const eventHandlers = {
         DOM.userEmail.value = '';
 
         // Simular tag en CRM
-        const method = DOM.method.value;
-        const context = DOM.context.value;
     }
 };
 
