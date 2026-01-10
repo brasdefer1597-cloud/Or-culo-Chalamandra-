@@ -1,7 +1,7 @@
-# Oráculo Chalamandra
+# EL ORÁCULO DE CHALAMANDRA
 
 ## Descripción
-El **Oráculo Chalamandra** es una herramienta interactiva diseñada para ayudarte a decodificar decisiones complejas utilizando diversos marcos de pensamiento, como los 6 Sombreros de De Bono, los 5 Porqués, el método Disney, y más.
+**EL ORÁCULO DE CHALAMANDRA** es una herramienta interactiva diseñada para ayudarte a decodificar decisiones complejas utilizando diversos marcos de pensamiento, como los 6 Sombreros de De Bono, los 5 Porqués, el método Disney, y más.
 
 ## Estructura del Proyecto
 
