@@ -16,11 +16,16 @@ const DOM = {
     clarityLabel: document.getElementById('clarity-label'),
     userLevel: document.getElementById('user-level'),
     paywallModal: document.getElementById('paywall-modal'),
-    closePaywallBtn: document.getElementById('close-paywall')
+    closePaywallBtn: document.getElementById('close-paywall'),
+    validateTokenBtn: document.getElementById('validate-token-btn'),
+    caosMasa: document.getElementById('caos-masa'),
+    metodologiasToken: document.getElementById('metodologias-token'),
+    workersOnlineCount: document.getElementById('workers-online-count')
 };
 
 const GEMINI_MODEL = 'gemini-1.5-flash';
 const FREE_QUERY_LIMIT = 3;
+const CLOUD_SNAPSHOT_URL = 'https://raw.githubusercontent.com/brasdefer1597-cloud/Chalamandra-HUB/main/hub/cloud_snapshot.json';
 const SYSTEM_INSTRUCTION = `Eres la Sabiduría de Chalamandra, una guía experta en marcos de pensamiento. Tu tono es sereno, inteligente, directo y empoderador (estilo Malandra Fresa pero en modo Mentora).
 Al recibir el [Método] y el [Contexto], genera 3-5 preguntas potentes que obliguen al usuario a salir de su sesgo cognitivo.
 Ejemplo para '6 Sombreros' en 'Decisión Laboral': 'Sombrero Negro: ¿Cuál es el riesgo oculto que tu ambición no te está dejando ver?'`;
@@ -145,6 +150,51 @@ async function callGeminiAPI({ method, context, situation }) {
     return text;
 }
 
+async function fetchClusterData() {
+    const response = await fetch(CLOUD_SNAPSHOT_URL);
+
+    if (!response.ok) {
+        throw new Error(`Cloud snapshot error (${response.status})`);
+    }
+
+    const data = await response.json();
+
+    if (DOM.caosMasa) {
+        DOM.caosMasa.textContent = String(data?.masa_devorada ?? '--');
+    }
+
+    if (DOM.metodologiasToken) {
+        const token = String(data?.ultima_llave ?? '');
+        DOM.metodologiasToken.textContent = token.slice(0, 4) || '----';
+    }
+
+    if (DOM.workersOnlineCount) {
+        DOM.workersOnlineCount.textContent = String(data?.nodos_activos ?? 0);
+    }
+
+    return data;
+}
+
+async function syncEliteStatus(userInput) {
+    if (!userInput) {
+        return false;
+    }
+
+    try {
+        const data = await fetchClusterData();
+        const ultimaLlave = String(data?.ultima_llave || '').trim();
+
+        if (ultimaLlave && userInput.trim() === ultimaLlave) {
+            localStorage.setItem('chalamandra_status', 'ELITE');
+            return true;
+        }
+    } catch (error) {
+        console.error('No se pudo validar el estado ELITE', error);
+    }
+
+    return false;
+}
+
 // MANEJADORES DE EVENTOS
 const eventHandlers = {
     async handleFormSubmit(e) {
@@ -159,7 +209,9 @@ const eventHandlers = {
             return;
         }
 
-        if (state.queryCount >= FREE_QUERY_LIMIT) {
+        const isElite = localStorage.getItem('chalamandra_status') === 'ELITE';
+
+        if (!isElite && state.queryCount >= FREE_QUERY_LIMIT) {
             showPaywall();
             return;
         }
@@ -198,6 +250,18 @@ const eventHandlers = {
         window.open('https://chalamandra.substack.com', '_blank');
     },
 
+    async handleValidateToken() {
+        const userInput = DOM.situation.value.trim();
+
+        if (!userInput) {
+            alert('Escribe tu token en el campo de situación para validarlo.');
+            return;
+        }
+
+        const isValid = await syncEliteStatus(userInput);
+        alert(isValid ? 'Token válido. Estado ELITE activado.' : 'Token inválido. Intenta nuevamente.');
+    },
+
     handleEmailSubmit(e) {
         e.preventDefault();
 
@@ -224,6 +288,14 @@ function init() {
     DOM.subscribeCta.addEventListener('click', eventHandlers.handleSubscribeCta);
     DOM.emailForm.addEventListener('submit', eventHandlers.handleEmailSubmit);
     DOM.closePaywallBtn.addEventListener('click', hidePaywall);
+
+    if (DOM.validateTokenBtn) {
+        DOM.validateTokenBtn.addEventListener('click', eventHandlers.handleValidateToken);
+    }
+
+    fetchClusterData().catch((error) => {
+        console.error('No se pudieron cargar las métricas del cluster', error);
+    });
 
     updateClarityProgress();
     updateLevelUI();

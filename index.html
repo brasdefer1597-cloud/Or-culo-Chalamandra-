@@ -62,7 +62,10 @@
                     <textarea id="situation" placeholder="Ejemplo: Estoy considerando cambiar de trabajo pero tengo miedo al cambio..." required></textarea>
                 </div>
 
-                <button id="generate-btn" type="submit" class="btn btn-primary">Generar preguntas personalizadas</button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button id="generate-btn" type="submit" class="btn btn-primary">Generar preguntas personalizadas</button>
+                    <button id="validate-token-btn" type="button" class="btn btn-secondary">Validar Token</button>
+                </div>
             </form>
         </section>
 
@@ -103,9 +106,19 @@
             </form>
         </section>
 
+        <section class="card">
+            <h2>Métricas Vivas del Cluster</h2>
+            <ul>
+                <li>Masa Devorada: <strong id="caos-masa">--</strong></li>
+                <li>Token Metodologías: <strong id="metodologias-token">----</strong></li>
+                <li>Workers Online: <strong id="workers-online-count">0</strong></li>
+            </ul>
+            <a href="https://brasdefer1597-cloud.github.io/Or-culo-Chalamandra-/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Abrir Oráculo</a>
+        </section>
+
         <footer>
             <p>© 2023 Chalamandra Magistral | Storytelling + frameworks para decidir mejor</p>
-            <p><a href="#" style="color: #666;">Política de privacidad</a></p>
+            <p><a href="https://brasdefer1597-cloud.github.io/Or-culo-Chalamandra-/" style="color: #666;">Política de privacidad</a></p>
         </footer>
     </div>
 
