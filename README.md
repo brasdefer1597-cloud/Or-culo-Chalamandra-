@@ -11,7 +11,6 @@ El proyecto ha sido reestructurado para separar la lógica, los estilos y la pre
 - **demo.html**: Una versión de demostración.
 - **assets/**: Carpeta que contiene los recursos estáticos.
   - **css/style.css**: Estilos globales de la aplicación.
-  - **js/data.js**: Banco de preguntas y constantes de configuración.
   - **js/main.js**: Lógica principal de la aplicación.
 
 ## Uso

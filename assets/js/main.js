@@ -25,14 +25,23 @@ const SYSTEM_INSTRUCTION = `Eres la Sabiduría de Chalamandra, una guía experta
 Al recibir el [Método] y el [Contexto], genera 3-5 preguntas potentes que obliguen al usuario a salir de su sesgo cognitivo.
 Ejemplo para '6 Sombreros' en 'Decisión Laboral': 'Sombrero Negro: ¿Cuál es el riesgo oculto que tu ambición no te está dejando ver?'`;
 
+function safeParseArray(value) {
+    try {
+        const parsed = JSON.parse(value || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+    } catch {
+        return [];
+    }
+}
+
 // UTILIDADES
 const utils = {
     show(element) {
-        element.classList.remove('hidden');
+        if (element) element.classList.remove('hidden');
     },
 
     hide(element) {
-        element.classList.add('hidden');
+        if (element) element.classList.add('hidden');
     },
 
     validateEmail(email) {
@@ -41,17 +50,32 @@ const utils = {
     },
 
     scrollToElement(element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    },
+
+    escapeHTML(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+
+        return text.replace(/[&<>"']/g, (char) => map[char]);
     },
 
     formatQuestionsAsList(text) {
         const lines = text
             .split('\n')
             .map((line) => line.replace(/^[-*\d.)\s]+/, '').trim())
-            .filter(Boolean);
+            .filter(Boolean)
+            .map((line) => this.escapeHTML(line));
 
         if (!lines.length) {
-            return `<div class="questions-block"><p>${text}</p></div>`;
+            return `<div class="questions-block"><p>${this.escapeHTML(text)}</p></div>`;
         }
 
         return `
@@ -67,7 +91,7 @@ const utils = {
 
 const state = {
     queryCount: Number(localStorage.getItem('oracleQueryCount') || 0),
-    methodsUsed: new Set(JSON.parse(localStorage.getItem('oracleMethodsUsed') || '[]'))
+    methodsUsed: new Set(safeParseArray(localStorage.getItem('oracleMethodsUsed')))
 };
 
 function saveState() {
@@ -80,13 +104,20 @@ function getUserLevel() {
 }
 
 function updateLevelUI() {
-    DOM.userLevel.textContent = getUserLevel();
+    if (DOM.userLevel) {
+        DOM.userLevel.textContent = getUserLevel();
+    }
 }
 
 function updateClarityProgress() {
     const filled = Math.min(100, Math.round((state.queryCount / FREE_QUERY_LIMIT) * 100));
-    DOM.clarityBar.style.width = `${filled}%`;
-    DOM.clarityLabel.textContent = `${filled}%`;
+    if (DOM.clarityBar) {
+        DOM.clarityBar.style.width = `${filled}%`;
+    }
+
+    if (DOM.clarityLabel) {
+        DOM.clarityLabel.textContent = `${filled}%`;
+    }
 }
 
 function showPaywall() {
@@ -150,9 +181,9 @@ const eventHandlers = {
     async handleFormSubmit(e) {
         e.preventDefault();
 
-        const method = DOM.method.value;
-        const context = DOM.context.value;
-        const situation = DOM.situation.value.trim();
+        const method = DOM.method?.value;
+        const context = DOM.context?.value;
+        const situation = DOM.situation?.value.trim();
 
         if (!method || !context || !situation) {
             alert('Por favor, completa todos los campos');
@@ -217,13 +248,35 @@ const eventHandlers = {
     }
 };
 
+function hasRequiredDOM() {
+    return !!(
+        DOM.form &&
+        DOM.method &&
+        DOM.context &&
+        DOM.situation &&
+        DOM.resultSection &&
+        DOM.questionsOutput &&
+        DOM.ctaSection &&
+        DOM.emailCta &&
+        DOM.subscribeCta &&
+        DOM.emailForm &&
+        DOM.userEmail &&
+        DOM.generateBtn
+    );
+}
+
 // INICIALIZACIÓN
 function init() {
+    if (!hasRequiredDOM()) {
+        console.warn('Chalamandra init abortado: faltan nodos requeridos en el DOM.');
+        return;
+    }
+
     DOM.form.addEventListener('submit', eventHandlers.handleFormSubmit);
     DOM.emailCta.addEventListener('click', eventHandlers.handleEmailCta);
     DOM.subscribeCta.addEventListener('click', eventHandlers.handleSubscribeCta);
     DOM.emailForm.addEventListener('submit', eventHandlers.handleEmailSubmit);
-    DOM.closePaywallBtn.addEventListener('click', hidePaywall);
+    DOM.closePaywallBtn?.addEventListener('click', hidePaywall);
 
     updateClarityProgress();
     updateLevelUI();
