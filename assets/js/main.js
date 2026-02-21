@@ -1,232 +1,290 @@
-// ELEMENTOS DOM - Cacheado para mejor performance
+import { inyectarSoberania, obtenerNivelDecodificacion } from './services/soberania.js';
+import { procesarHistoriaOraculo } from './processors/OracleProcessor.js';
+
 const DOM = {
+    storyForm: document.getElementById('story-form'),
+    storyInput: document.getElementById('raw-story'),
     form: document.getElementById('oracle-form'),
-    method: document.getElementById('method'),
-    context: document.getElementById('context'),
-    situation: document.getElementById('situation'),
-    resultSection: document.getElementById('result-section'),
-    questionsOutput: document.getElementById('questions-output'),
-    ctaSection: document.getElementById('cta-section'),
-    emailCta: document.getElementById('email-cta'),
-    subscribeCta: document.getElementById('subscribe-cta'),
-    emailForm: document.getElementById('email-form'),
-    userEmail: document.getElementById('user-email'),
-    generateBtn: document.getElementById('generate-btn'),
-    clarityBar: document.getElementById('clarity-progress'),
-    clarityLabel: document.getElementById('clarity-label'),
-    userLevel: document.getElementById('user-level'),
-    paywallModal: document.getElementById('paywall-modal'),
-    closePaywallBtn: document.getElementById('close-paywall')
+    keyInput: document.getElementById('period-key'),
+    processorStatus: document.getElementById('processor-status'),
+    factorizationRate: document.getElementById('factorization-rate'),
+    output: document.getElementById('display'),
+    processPanel: document.getElementById('process-panel'),
+    processStage: document.getElementById('process-stage'),
+    hardwareStatus: document.getElementById('hardware-status'),
+    keyValidation: document.getElementById('key-validation'),
+    tempWindow: document.getElementById('temp-window'),
+    fidelityCount: document.getElementById('fidelity-count')
 };
 
-const GEMINI_MODEL = 'gemini-1.5-flash';
-const FREE_QUERY_LIMIT = 3;
-const SYSTEM_INSTRUCTION = `Eres la Sabiduría de Chalamandra, una guía experta en marcos de pensamiento. Tu tono es sereno, inteligente, directo y empoderador (estilo Malandra Fresa pero en modo Mentora).
-Al recibir el [Método] y el [Contexto], genera 3-5 preguntas potentes que obliguen al usuario a salir de su sesgo cognitivo.
-Ejemplo para '6 Sombreros' en 'Decisión Laboral': 'Sombrero Negro: ¿Cuál es el riesgo oculto que tu ambición no te está dejando ver?'`;
+const LOCKED_MESSAGE = 'Procesador Ocupado. Regresa cuando el Celeron respire';
+const TEMP_KEY_TTL_MS = 60 * 60 * 1000;
+const PROCESS_STAGES = [
+    'Gira el Mandala... (De Bono / 7 colores)',
+    'Excavando Raíces... (5 Porqués + Shor)',
+    'Ejecutando Jugada Posicional... (Ajedrez Criminal)',
+    'Filtrando Realismo... (Disney + VQE)',
+    'Coreografía de Prioridad... (Covey)'
+];
 
-// UTILIDADES
-const utils = {
-    show(element) {
-        element.classList.remove('hidden');
-    },
+let stageIntervalId = null;
+let lastStory = '';
 
-    hide(element) {
-        element.classList.add('hidden');
-    },
-
-    validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    },
-
-    scrollToElement(element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    },
-
-    formatQuestionsAsList(text) {
-        const lines = text
-            .split('\n')
-            .map((line) => line.replace(/^[-*\d.)\s]+/, '').trim())
-            .filter(Boolean);
-
-        if (!lines.length) {
-            return `<div class="questions-block"><p>${text}</p></div>`;
-        }
-
-        return `
-            <div class="questions-block">
-                <div class="hat-title"><span>Decodificación estratégica</span></div>
-                <ul class="questions-list">
-                    ${lines.map((line) => `<li>${line}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
-};
-
-const state = {
-    queryCount: Number(localStorage.getItem('oracleQueryCount') || 0),
-    methodsUsed: new Set(JSON.parse(localStorage.getItem('oracleMethodsUsed') || '[]'))
-};
-
-function saveState() {
-    localStorage.setItem('oracleQueryCount', String(state.queryCount));
-    localStorage.setItem('oracleMethodsUsed', JSON.stringify(Array.from(state.methodsUsed)));
-}
-
-function getUserLevel() {
-    return state.methodsUsed.size >= 3 ? 'Estratega' : 'Iniciado';
-}
-
-function updateLevelUI() {
-    DOM.userLevel.textContent = getUserLevel();
-}
-
-function updateClarityProgress() {
-    const filled = Math.min(100, Math.round((state.queryCount / FREE_QUERY_LIMIT) * 100));
-    DOM.clarityBar.style.width = `${filled}%`;
-    DOM.clarityLabel.textContent = `${filled}%`;
-}
-
-function showPaywall() {
-    utils.show(DOM.paywallModal);
-}
-
-function hidePaywall() {
-    utils.hide(DOM.paywallModal);
-}
-
-function getGeminiApiKey() {
-    return window.GEMINI_API_KEY || localStorage.getItem('GEMINI_API_KEY') || '';
-}
-
-async function callGeminiAPI({ method, context, situation }) {
-    const apiKey = getGeminiApiKey();
-    if (!apiKey) {
-        throw new Error('Falta la API key de Gemini. Define window.GEMINI_API_KEY o localStorage.GEMINI_API_KEY');
-    }
-
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
-    const payload = {
-        system_instruction: {
-            parts: [{ text: SYSTEM_INSTRUCTION }]
-        },
-        contents: [
-            {
-                role: 'user',
-                parts: [
-                    {
-                        text: `Método: ${method}\nContexto: ${context}\nSituación: ${situation}\n\nEntrega solo preguntas de alto impacto.`
-                    }
-                ]
-            }
-        ]
+function readCeleronState() {
+    const fallback = {
+        status: 'busy',
+        periodKey: '',
+        factorizationRate: 0
     };
 
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
+    try {
+        const raw = localStorage.getItem('celeronShorState');
+        if (!raw) {
+            return {
+                ...fallback,
+                status: localStorage.getItem('shorStatus') || 'busy',
+                periodKey: localStorage.getItem('shorPeriodKey') || '',
+                factorizationRate: Number(localStorage.getItem('shorFactorizationRate') || 0)
+            };
+        }
 
-    if (!response.ok) {
-        const errorBody = await response.text();
-        throw new Error(`Gemini API error (${response.status}): ${errorBody}`);
+        const parsed = JSON.parse(raw);
+        return {
+            status: parsed.status || fallback.status,
+            periodKey: parsed.periodKey || '',
+            factorizationRate: Number(parsed.factorizationRate || 0)
+        };
+    } catch (error) {
+        console.error('Estado del Celeron corrupto:', error);
+        return fallback;
     }
-
-    const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!text) {
-        throw new Error('No se recibió contenido desde Gemini');
-    }
-
-    return text;
 }
 
-// MANEJADORES DE EVENTOS
-const eventHandlers = {
-    async handleFormSubmit(e) {
-        e.preventDefault();
-
-        const method = DOM.method.value;
-        const context = DOM.context.value;
-        const situation = DOM.situation.value.trim();
-
-        if (!method || !context || !situation) {
-            alert('Por favor, completa todos los campos');
-            return;
-        }
-
-        if (state.queryCount >= FREE_QUERY_LIMIT) {
-            showPaywall();
-            return;
-        }
-
-        DOM.generateBtn.innerText = 'DECODIFICANDO...';
-        DOM.generateBtn.disabled = true;
-
-        try {
-            const rawQuestions = await callGeminiAPI({ method, context, situation });
-            DOM.questionsOutput.innerHTML = utils.formatQuestionsAsList(rawQuestions);
-
-            state.queryCount += 1;
-            state.methodsUsed.add(method);
-            saveState();
-            updateClarityProgress();
-            updateLevelUI();
-
-            utils.show(DOM.resultSection);
-            utils.show(DOM.ctaSection);
-            utils.scrollToElement(DOM.resultSection);
-        } catch (error) {
-            console.error('Error en la conexión mística', error);
-            alert('No se pudo conectar con Gemini. Revisa tu API key e intenta nuevamente.');
-        } finally {
-            DOM.generateBtn.innerText = 'Generar preguntas personalizadas';
-            DOM.generateBtn.disabled = false;
-        }
-    },
-
-    handleEmailCta() {
-        utils.show(DOM.emailForm);
-        DOM.userEmail.focus();
-    },
-
-    handleSubscribeCta() {
-        window.open('https://chalamandra.substack.com', '_blank');
-    },
-
-    handleEmailSubmit(e) {
-        e.preventDefault();
-
-        const email = DOM.userEmail.value.trim();
-
-        if (!utils.validateEmail(email)) {
-            alert('Por favor, introduce un email válido');
-            return;
-        }
-
-        const subject = `🔮 Tu Decodificación: ${DOM.situation.value.trim() || 'Tu situación'}`;
-        const body = `Has consultado al Oráculo. Aquí están las coordenadas de tu próxima gran decisión:\n\nMÉTODO: ${DOM.method.value}\nTUS PREGUNTAS DE PODER:\n${DOM.questionsOutput.innerText}\n\nTU MICRO-ACCIÓN (SRAP):\nNo dejes que la claridad se evapore. Tienes 72 horas para mover la primera pieza.\n\nMantén la frecuencia alta.\n— Chalamandra Magistral`;
-
-        window.location.href = `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        utils.hide(DOM.emailForm);
-        DOM.userEmail.value = '';
+function readTempKey() {
+    try {
+        const raw = localStorage.getItem('oraculoTemporalKey');
+        return raw ? JSON.parse(raw) : null;
+    } catch {
+        return null;
     }
-};
+}
 
-// INICIALIZACIÓN
+function issueOrRefreshTempKey(periodKey) {
+    if (!periodKey) return null;
+    const current = readTempKey();
+    const now = Date.now();
+
+    if (current && current.key === periodKey && current.expiresAt > now) {
+        return current;
+    }
+
+    const temporal = {
+        key: periodKey,
+        issuedAt: now,
+        expiresAt: now + TEMP_KEY_TTL_MS
+    };
+    localStorage.setItem('oraculoTemporalKey', JSON.stringify(temporal));
+    return temporal;
+}
+
+function getRemainingWindowMs(temp) {
+    if (!temp) return 0;
+    return Math.max(0, temp.expiresAt - Date.now());
+}
+
+function formatMs(ms) {
+    const total = Math.floor(ms / 1000);
+    const m = String(Math.floor(total / 60)).padStart(2, '0');
+    const s = String(total % 60).padStart(2, '0');
+    return `${m}:${s}`;
+}
+
+function getFidelityCount() {
+    return Number(localStorage.getItem('oracleValidKeyCount') || 0);
+}
+
+function setFidelityCount(value) {
+    localStorage.setItem('oracleValidKeyCount', String(value));
+}
+
+function writeOutput(message, isSuccess = false, magistral = false) {
+    DOM.output.classList.remove('hidden', 'error', 'success', 'oraculo-magistral', 'fidelidad-trigger');
+    DOM.output.classList.add(isSuccess ? 'success' : 'error');
+    if (magistral) {
+        DOM.output.classList.add('oraculo-magistral');
+    }
+    DOM.output.textContent = message;
+}
+
+function renderFidelityReward(contentText) {
+    DOM.output.classList.remove('hidden', 'error', 'success', 'oraculo-magistral');
+    DOM.output.classList.add('success', 'fidelidad-trigger');
+    DOM.output.innerHTML = `
+        <h3>🏆 SOBERANÍA ALCANZADA</h3>
+        <p>Has procesado 10 historias crudas. El Celeron te reconoce.</p>
+        <p>${contentText.replace(/\n/g, '<br>')}</p>
+        <a href="https://ko-fi.com/chalamandramagistral" target="_blank" rel="noopener noreferrer" class="boton-dorado">
+            DESBLOQUEAR CONTRATO HITMAN (KO-FI)
+        </a>
+    `;
+}
+
+function startProcessCycle() {
+    let stageIndex = 0;
+    DOM.processPanel.classList.remove('hidden');
+    DOM.processStage.textContent = PROCESS_STAGES[0];
+
+    if (stageIntervalId) {
+        clearInterval(stageIntervalId);
+    }
+
+    stageIntervalId = setInterval(() => {
+        stageIndex = (stageIndex + 1) % PROCESS_STAGES.length;
+        DOM.processStage.textContent = PROCESS_STAGES[stageIndex];
+    }, 1200);
+}
+
+function stopProcessCycle() {
+    if (stageIntervalId) {
+        clearInterval(stageIntervalId);
+        stageIntervalId = null;
+    }
+}
+
+async function syncRadiationPanel() {
+    const { poas, ultima_llave } = await inyectarSoberania();
+    const nivel = obtenerNivelDecodificacion(poas, ultima_llave);
+
+    DOM.hardwareStatus.textContent = `Sincronizando con Nodo Celeron (Xalapa)... POAS ${poas.toFixed(2)} // Nivel ${nivel}`;
+
+    if (ultima_llave === '92028127') {
+        DOM.keyValidation.textContent = 'Llave 92028127 detectada. Arsenal Chalamandra desbloqueado.';
+    } else {
+        DOM.keyValidation.textContent = 'Llave élite no detectada. Modo de lectura limitada.';
+    }
+
+    const count = getFidelityCount();
+    DOM.fidelityCount.textContent = `Fidelidad Qbitz: ${count}/10 accesos válidos.`;
+
+    return { poas, ultima_llave, nivel };
+}
+
+function syncProcessorState() {
+    const celeronState = readCeleronState();
+    const isReady = celeronState.status === 'complete';
+    const rate = Number.isFinite(celeronState.factorizationRate) ? celeronState.factorizationRate : 0;
+
+    DOM.factorizationRate.textContent = `${rate.toFixed(2)} factores/s`;
+
+    if (isReady) {
+        DOM.processorStatus.textContent = 'Procesador Libre. Llave del Periodo requerida';
+        DOM.keyInput.disabled = false;
+        DOM.keyInput.placeholder = 'Ingresa la Llave del Periodo o la Llave Temporal';
+        stopProcessCycle();
+        issueOrRefreshTempKey(celeronState.periodKey);
+    } else {
+        DOM.processorStatus.textContent = LOCKED_MESSAGE;
+        DOM.keyInput.value = '';
+        DOM.keyInput.placeholder = LOCKED_MESSAGE;
+        DOM.keyInput.disabled = true;
+    }
+
+    const temp = readTempKey();
+    const remaining = getRemainingWindowMs(temp);
+    DOM.tempWindow.textContent = remaining > 0
+        ? `Ventana de Tráfico: Llave temporal activa (${formatMs(remaining)} restantes).`
+        : 'Ventana de Tráfico: sin llave temporal activa.';
+
+    return celeronState;
+}
+
+function buildMagistralOutput(periodKey, decoderStatus) {
+    return `RESULTADO DE DECODIFICACIÓN MAGISTRAL:\n\nPerspectiva: (Sombrero Verde) - Innovación Disruptiva detectada.\n\nRaíz: (5to Porqué) - Falta de autonomía financiera.\n\nJugada: (Ajedrez) - Movimiento de flanco; priorizar Quadrante II (Covey).\n\nEstado: Claridad Alcanzada (VQE: -1.0000).\n\nNivel de Decodificación: ${decoderStatus.nivel}\nMétodo Activo: ${decoderStatus.metodologia}\nDiagnóstico: ${decoderStatus.analisis}\nLlave Élite: ${periodKey}`;
+}
+
+function getContractRewardText(count) {
+    return `CONTRATO DE HITMAN DESBLOQUEADO\n\nHas alcanzado ${count} validaciones de llave.`;
+}
+
 function init() {
-    DOM.form.addEventListener('submit', eventHandlers.handleFormSubmit);
-    DOM.emailCta.addEventListener('click', eventHandlers.handleEmailCta);
-    DOM.subscribeCta.addEventListener('click', eventHandlers.handleSubscribeCta);
-    DOM.emailForm.addEventListener('submit', eventHandlers.handleEmailSubmit);
-    DOM.closePaywallBtn.addEventListener('click', hidePaywall);
+    syncProcessorState();
+    syncRadiationPanel();
 
-    updateClarityProgress();
-    updateLevelUI();
+    setInterval(() => {
+        syncProcessorState();
+        syncRadiationPanel();
+    }, 1000);
+
+    DOM.storyForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const story = DOM.storyInput.value.trim();
+
+        if (!story) {
+            writeOutput('Entrada vacía. Ingresa una historia o una Realidad Cruda para iniciar.');
+            return;
+        }
+
+        lastStory = story;
+        startProcessCycle();
+
+        const decoderStatus = await procesarHistoriaOraculo(story);
+        writeOutput(
+            `Entrada recibida. Trifecta Cuántica inicializada.\n${decoderStatus.metodologia}: ${decoderStatus.analisis}`,
+            true,
+            decoderStatus.poas_aplicado >= 1.0
+        );
+
+        const celeronState = syncProcessorState();
+        if (celeronState.status !== 'complete') {
+            writeOutput(`ACCESO DENEGADO\n${LOCKED_MESSAGE}`);
+        }
+    });
+
+    DOM.form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const celeronState = syncProcessorState();
+        const isReady = celeronState.status === 'complete';
+
+        if (!isReady) {
+            writeOutput(`ACCESO DENEGADO\n${LOCKED_MESSAGE}`);
+            return;
+        }
+
+        if (!lastStory) {
+            writeOutput('Primero debes ingresar una Historia para activar la decodificación.');
+            return;
+        }
+
+        const submittedKey = DOM.keyInput.value.trim();
+        const expectedKey = String(celeronState.periodKey || '').trim();
+        const temp = readTempKey();
+        const temporalValida = temp && temp.key === submittedKey && getRemainingWindowMs(temp) > 0;
+
+        if (!submittedKey) {
+            writeOutput('Entrada vacía. Se requiere Llave del Periodo.');
+            return;
+        }
+
+        if (submittedKey !== expectedKey && !temporalValida) {
+            writeOutput('Llave inválida o expirada. La bóveda permanece sellada.');
+            return;
+        }
+
+        const decoderStatus = await procesarHistoriaOraculo(lastStory);
+        const newCount = getFidelityCount() + 1;
+        setFidelityCount(newCount);
+
+        const magistral = decoderStatus.poas_aplicado >= 1.0;
+        if (newCount >= 10) {
+            renderFidelityReward(`${buildMagistralOutput(submittedKey, decoderStatus)}\n\n${getContractRewardText(newCount)}`);
+        } else {
+            writeOutput(buildMagistralOutput(submittedKey, decoderStatus), true, magistral);
+        }
+
+        DOM.keyInput.value = '';
+        syncRadiationPanel();
+    });
 }
 
 if (document.readyState === 'loading') {
