@@ -1,213 +1,79 @@
 :root {
-    --bg: #020402;
-    --panel: #010301;
-    --phosphor: #7bff7b;
-    --phosphor-dim: #3ea83e;
-    --danger: #ff6868;
+    --bg: #050607;
+    --panel: #0b0f12;
+    --line: #1f4f2d;
+    --accent: #6dff88;
+    --text: #ddffe5;
+    --muted: #97c9a3;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     min-height: 100vh;
     font-family: "Courier New", Courier, monospace;
     background: var(--bg);
-    color: var(--phosphor);
-    display: grid;
-    place-items: center;
-    padding: 1rem;
+    color: var(--text);
+    padding: 1.2rem;
 }
 
-.terminal-shell {
-    width: min(960px, 100%);
-    border: 1px solid var(--phosphor-dim);
+.knowledge-shell {
+    max-width: 1000px;
+    margin: 0 auto;
+    border: 1px solid var(--line);
     background: var(--panel);
     padding: 1.25rem;
-    box-shadow: inset 0 0 0 1px #000, 0 0 35px rgba(108, 251, 108, 0.12);
 }
 
-.bootline,
-h1,
-p {
-    margin: 0 0 0.9rem;
-}
-
-.bootline,
-.prompt {
-    color: var(--phosphor-dim);
-}
-
-h1 {
-    font-size: clamp(1rem, 2.4vw, 1.35rem);
-    letter-spacing: 0.08em;
-    margin-bottom: 1.2rem;
-}
-
-.status-panel,
-.process-panel {
-    border: 1px dashed var(--phosphor-dim);
-    padding: 0.85rem;
-    margin-bottom: 1.1rem;
-}
-
-.story-form,
-.key-form {
+.knowledge-header {
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 0.9rem;
     margin-bottom: 1rem;
 }
 
-textarea,
-input {
-    width: 100%;
-    border: 1px solid var(--phosphor-dim);
-    background: #000;
-    color: var(--phosphor);
-    padding: 0.7rem;
-    font: inherit;
+.kicker {
+    color: var(--muted);
+    margin: 0 0 0.55rem;
 }
 
-textarea {
-    resize: vertical;
-    margin-top: 0.45rem;
-    min-height: 90px;
-}
+h1 { margin: 0 0 0.5rem; font-size: clamp(1.2rem, 2.8vw, 1.8rem); }
+.summary { margin: 0; color: var(--muted); }
 
-.key-form {
+.knowledge-grid {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0.5rem;
-    align-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.8rem;
 }
 
-input:disabled {
-    opacity: 0.75;
-    cursor: not-allowed;
+.knowledge-card {
+    border: 1px solid var(--line);
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.2);
 }
 
-textarea:focus,
-input:focus {
-    outline: none;
-    border-color: var(--phosphor);
+.knowledge-card h2 {
+    margin: 0 0 0.45rem;
+    color: var(--accent);
+    font-size: 1rem;
 }
 
-.terminal-btn {
-    border: 1px solid var(--phosphor-dim);
-    background: #000;
-    color: var(--phosphor);
-    font: inherit;
-    padding: 0.62rem 0.75rem;
-    cursor: pointer;
-}
+.knowledge-card p { margin: 0; }
 
-.terminal-btn:hover {
-    border-color: var(--phosphor);
-}
-
-.spinner {
-    display: inline-block;
-    width: 0.7rem;
-    height: 0.7rem;
-    border: 2px solid var(--phosphor-dim);
-    border-top-color: var(--phosphor);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    vertical-align: middle;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.process-hint {
-    color: var(--phosphor-dim);
-    font-size: 0.92rem;
-}
-
-.vault-output {
-    margin-top: 1.1rem;
-    border-top: 1px solid var(--phosphor-dim);
+.knowledge-footer {
+    margin-top: 1rem;
     padding-top: 1rem;
-    white-space: pre-wrap;
+    border-top: 1px dashed var(--line);
 }
 
-.vault-output.error {
-    color: var(--danger);
-}
-
-.vault-output.success {
-    color: var(--phosphor);
-}
-
-#hardware-status,
-#key-validation,
-#temp-window,
-#fidelity-count {
-    font-size: 0.92rem;
-}
-
-#key-validation {
-    color: var(--phosphor);
-}
-
-
-/* Glitch de Verdad - Solo para Decodificación Magistral */
-.oraculo-magistral {
-    position: relative;
-    color: #00ff41;
-    text-shadow:
-        0.05em 0 0 rgba(255, 0, 81, 0.75),
-        -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
-        0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
-    animation: glitch 500ms infinite;
-}
-
-@keyframes glitch {
-    0% { text-shadow: 0.05em 0 0 #ff0051, -0.05em -0.025em 0 #00ff00, 0.025em 0.05em 0 #0000ff; }
-    14% { text-shadow: 0.05em 0 0 #ff0051, -0.05em -0.025em 0 #00ff00, 0.025em 0.05em 0 #0000ff; }
-    15% { text-shadow: -0.05em -0.025em 0 #ff0051, 0.025em 0.025em 0 #00ff00, -0.05em -0.05em 0 #0000ff; }
-    49% { text-shadow: -0.05em -0.025em 0 #ff0051, 0.025em 0.025em 0 #00ff00, -0.05em -0.05em 0 #0000ff; }
-    50% { text-shadow: 0.025em 0.05em 0 #ff0051, 0.05em 0 0 #00ff00, 0 -0.05em 0 #0000ff; }
-    99% { text-shadow: 0.025em 0.05em 0 #ff0051, 0.05em 0 0 #00ff00, 0 -0.05em 0 #0000ff; }
-    100% { text-shadow: -0.025em 0 0 #ff0051, -0.025em -0.025em 0 #00ff00, -0.025em -0.05em 0 #0000ff; }
-}
-
-/* Capa de Fidelidad Qbitz */
-.fidelidad-trigger {
-    border: 1px solid #ff0051;
-    background: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 0 15px rgba(255, 0, 81, 0.5);
-    padding: 10px;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-
-.boton-dorado {
+.return-button {
     display: inline-block;
-    margin-top: 0.75rem;
-    padding: 0.45rem 0.7rem;
-    border: 1px solid #ffcf40;
-    color: #ffcf40;
+    border: 1px solid var(--accent);
+    color: var(--accent);
     text-decoration: none;
+    padding: 0.6rem 0.8rem;
 }
 
-.boton-dorado:hover {
-    background: rgba(255, 207, 64, 0.1);
-}
-
-.hidden {
-    display: none;
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+.return-button:hover {
+    background: rgba(109, 255, 136, 0.12);
 }
