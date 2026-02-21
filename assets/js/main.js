@@ -2,12 +2,22 @@ const DOM = {
     form: document.getElementById('oracle-form'),
     situation: document.getElementById('situation'),
     method: document.getElementById('method'),
+    generateBtn: document.getElementById('generate-btn'),
     resultSection: document.getElementById('result-section'),
     resultOutput: document.getElementById('result-output'),
     goSrap: document.getElementById('go-srap')
 };
 
 const TECHNICAL_PATTERN = /(error|bug|api|servidor|latencia|red|ca[ií]da|timeout|dns|infra|deploy|backend|frontend)/i;
+const SRAP_DELAY_MS = 5000;
+const DEFAULT_BUTTON_LABEL = 'Generar Preguntas';
+const SRAP_BUTTON_LABEL = 'SRAP: Entrando en Presencia...';
+
+function wait(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
 
 function applyContext(question, situation) {
     return question
@@ -45,7 +55,7 @@ function renderResults(method, situation) {
     DOM.resultSection.classList.remove('hidden');
 }
 
-function handleSubmit(event) {
+async function handleSubmit(event) {
     event.preventDefault();
     const situation = DOM.situation.value.trim();
     const method = DOM.method.value;
@@ -55,7 +65,14 @@ function handleSubmit(event) {
         return;
     }
 
+    DOM.generateBtn.disabled = true;
+    DOM.generateBtn.textContent = SRAP_BUTTON_LABEL;
+
+    await wait(SRAP_DELAY_MS);
     renderResults(method, situation);
+
+    DOM.generateBtn.disabled = false;
+    DOM.generateBtn.textContent = DEFAULT_BUTTON_LABEL;
 }
 
 DOM.form.addEventListener('submit', handleSubmit);

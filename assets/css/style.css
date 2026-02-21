@@ -128,3 +128,11 @@ button, .btn-ghost, .btn-secondary {
 }
 
 .hidden { display: none; }
+
+
+.btn-primary:disabled {
+    background: rgba(170, 176, 197, 0.2);
+    border-color: #6f7587;
+    color: #c3c7d3;
+    cursor: not-allowed;
+}
