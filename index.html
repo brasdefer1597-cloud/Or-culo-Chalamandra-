@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Módulo 04 de Chalamandra: base de conocimientos para decodificación y soberanía." />
-    <title>Módulo 04 | Base de Conocimientos</title>
+    <meta name="description" content="El Oráculo de Chalamandra: matriz de decodificación para transformar caos en claridad usando frameworks de ingeniería humana.">
+    <title>El Oráculo de Chalamandra</title>
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-    <main class="knowledge-shell">
-        <header class="knowledge-header">
-            <p class="kicker">CHALAMANDRA // MÓDULO 04</p>
-            <h1>Base de Conocimientos</h1>
-            <p class="summary">Repositorio táctico para transformar caos narrativo en claridad operacional.</p>
+    <main class="oracle-shell">
+        <header class="oracle-header">
+            <p class="kicker">CHALAMANDRA HUB // MATRIZ DE DECODIFICACIÓN</p>
+            <h1>EL ORÁCULO</h1>
+            <p class="subtitle">Input: Caos narrativo · Selector: Framework · Output: Perspectivas accionables</p>
         </header>
 
-        <section class="knowledge-grid" aria-label="Capas de conocimiento del módulo 04">
-            <article class="knowledge-card">
-                <h2>Trifecta Cuántica</h2>
-                <p>Marco central: Entrada (Historia) → Proceso (Shor/VQE) → Salida (Brújula).</p>
-            </article>
-            <article class="knowledge-card">
-                <h2>Decodificación Magistral</h2>
-                <p>Criterio de activación: sincronía con POAS, llave válida y validación criptográfica.</p>
-            </article>
-            <article class="knowledge-card">
-                <h2>Loop de Soberanía</h2>
-                <p>Escasez temporal de llave + fidelidad Qbitz + conversión de alto valor.</p>
-            </article>
-            <article class="knowledge-card">
-                <h2>Protocolos de Operación</h2>
-                <p>Uso del Oráculo como bóveda: acceso condicionado al estado del Celeron.</p>
-            </article>
+        <section class="oracle-card">
+            <form id="oracle-form" novalidate>
+                <label for="situation">Describe tu situación (el caos)</label>
+                <textarea id="situation" rows="4" placeholder="Ejemplo: No sé si lanzar mi oferta ahora o esperar más validación del mercado..."></textarea>
+
+                <label for="method">Selecciona metodología</label>
+                <select id="method">
+                    <option value="">-- Elige un framework --</option>
+                    <option value="6 Sombreros">6 Sombreros de De Bono</option>
+                    <option value="5 Porqués">5 Porqués</option>
+                    <option value="Disney">Método Disney</option>
+                    <option value="Paul-Elder">Paul-Elder</option>
+                    <option value="Covey">Covey</option>
+                    <option value="OODA">OODA</option>
+                    <option value="Árbol de decisiones">Árbol de decisiones</option>
+                    <option value="Cynefin">Cynefin</option>
+                </select>
+
+                <div class="button-row">
+                    <button type="submit" id="generate-btn" class="btn-primary">Generar Preguntas</button>
+                    <a class="btn-ghost" href="https://alto-ethics-psychiatry-quarter.trycloudflare.com">Retorno al Oráculo (HUB)</a>
+                </div>
+            </form>
         </section>
 
-        <footer class="knowledge-footer">
-            <a class="return-button" href="https://alto-ethics-psychiatry-quarter.trycloudflare.com" target="_self" rel="noopener noreferrer">
-                Retorno al Oráculo
-            </a>
-        </footer>
+        <section id="result-section" class="oracle-card hidden" aria-live="polite">
+            <h2>Resultado de Decodificación</h2>
+            <div id="result-output"></div>
+
+            <div class="next-steps">
+                <a id="go-ajedrez" class="btn-secondary" href="https://brasdefer1597-cloud.github.io/chalamandra-ajedrez/" target="_blank" rel="noopener noreferrer">Ir al AJEDREZ Estratégico</a>
+                <a id="go-srap" class="btn-secondary hidden" href="https://brasdefer1597-cloud.github.io/chalamandra-srap/" target="_blank" rel="noopener noreferrer">Ir al SRAP (Realidad Cruda)</a>
+            </div>
+        </section>
     </main>
+
+    <script src="./assets/js/data.js"></script>
+    <script src="./assets/js/main.js"></script>
 </body>
 </html>
