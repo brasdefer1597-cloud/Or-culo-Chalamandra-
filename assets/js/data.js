@@ -1,13 +1,5 @@
 // CONSTANTES Y CONFIGURACIÓN
-const HAT_COLORS = {
-    "Blanco": "#FFFFFF",
-    "Rojo": "#FF0000",
-    "Negro": "#000000",
-    "Amarillo": "#FFFF00",
-    "Verde": "#00FF00",
-    "Azul": "#0000FF"
-};
-
+// [REMOVIDO] HAT_COLORS: no estaba en uso en runtime y añadía ruido de mantenimiento.
 const QUESTION_BANK = {
     "6 Sombreros": {
         "Blanco": [
