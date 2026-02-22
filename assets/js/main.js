@@ -14,13 +14,11 @@ const DOM = {
     generateBtn: document.getElementById('generate-btn'),
     clarityBar: document.getElementById('clarity-progress'),
     clarityLabel: document.getElementById('clarity-label'),
-    userLevel: document.getElementById('user-level'),
-    paywallModal: document.getElementById('paywall-modal'),
-    closePaywallBtn: document.getElementById('close-paywall')
+    userLevel: document.getElementById('user-level')
 };
 
 const GEMINI_MODEL = 'gemini-1.5-flash';
-const FREE_QUERY_LIMIT = 3;
+const CLARITY_MILESTONE = 3;
 const SYSTEM_INSTRUCTION = `Eres la Sabiduría de Chalamandra, una guía experta en marcos de pensamiento. Tu tono es sereno, inteligente, directo y empoderador (estilo Malandra Fresa pero en modo Mentora).
 Al recibir el [Método] y el [Contexto], genera 3-5 preguntas potentes que obliguen al usuario a salir de su sesgo cognitivo.
 Ejemplo para '6 Sombreros' en 'Decisión Laboral': 'Sombrero Negro: ¿Cuál es el riesgo oculto que tu ambición no te está dejando ver?'`;
@@ -84,18 +82,11 @@ function updateLevelUI() {
 }
 
 function updateClarityProgress() {
-    const filled = Math.min(100, Math.round((state.queryCount / FREE_QUERY_LIMIT) * 100));
+    const filled = Math.min(100, Math.round((state.queryCount / CLARITY_MILESTONE) * 100));
     DOM.clarityBar.style.width = `${filled}%`;
     DOM.clarityLabel.textContent = `${filled}%`;
 }
 
-function showPaywall() {
-    utils.show(DOM.paywallModal);
-}
-
-function hidePaywall() {
-    utils.hide(DOM.paywallModal);
-}
 
 function getGeminiApiKey() {
     return window.GEMINI_API_KEY || localStorage.getItem('GEMINI_API_KEY') || '';
@@ -159,10 +150,6 @@ const eventHandlers = {
             return;
         }
 
-        if (state.queryCount >= FREE_QUERY_LIMIT) {
-            showPaywall();
-            return;
-        }
 
         DOM.generateBtn.innerText = 'DECODIFICANDO...';
         DOM.generateBtn.disabled = true;
@@ -223,7 +210,6 @@ function init() {
     DOM.emailCta.addEventListener('click', eventHandlers.handleEmailCta);
     DOM.subscribeCta.addEventListener('click', eventHandlers.handleSubscribeCta);
     DOM.emailForm.addEventListener('submit', eventHandlers.handleEmailSubmit);
-    DOM.closePaywallBtn.addEventListener('click', hidePaywall);
 
     updateClarityProgress();
     updateLevelUI();
