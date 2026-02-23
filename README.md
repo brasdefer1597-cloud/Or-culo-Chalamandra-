@@ -1,22 +1,52 @@
 # EL ORÁCULO DE CHALAMANDRA
 
-## Descripción
-**EL ORÁCULO DE CHALAMANDRA** es una herramienta interactiva diseñada para ayudarte a decodificar decisiones complejas utilizando diversos marcos de pensamiento, como los 6 Sombreros de De Bono, los 5 Porqués, el método Disney, y más.
+Aplicación web en **Next.js + TypeScript** para decodificar decisiones complejas con marcos de pensamiento estratégicos.
 
-## Estructura del Proyecto
+## Arquitectura (limpia y lista para Vercel)
 
-El proyecto ha sido reestructurado para separar la lógica, los estilos y la presentación:
+```txt
+/pages
+  |_ index.tsx
+  |_ demo.tsx
+  |_ _app.tsx
+/components
+  |_ layout/Header.tsx
+  |_ forms/OracleForm.tsx
+  |_ oracle/QuestionsPanel.tsx
+  |_ cta/CtaSection.tsx
+/lib
+  |_ types.ts
+  |_ questionBank.ts
+  |_ oracleService.ts
+/styles
+  |_ globals.css
+```
 
-- **index.html**: La versión completa de la aplicación.
-- **demo.html**: Una versión de demostración.
-- **assets/**: Carpeta que contiene los recursos estáticos.
-  - **css/style.css**: Estilos globales de la aplicación.
-  - **js/data.js**: Banco de preguntas y constantes de configuración.
-  - **js/main.js**: Lógica principal de la aplicación.
+## Mejoras aplicadas
 
-## Uso
+- Eliminación de duplicados y legado estático (`assets/*.min.*`, HTML plano inicial).
+- Separación UI/lógica con componentes reutilizables.
+- Tipado estricto TypeScript en métodos, contextos y servicios.
+- Fallback local cuando Gemini no está disponible.
+- Proyecto preparado para despliegue directo en Vercel (`vercel.json`).
 
-1.  Abre `index.html` en tu navegador para acceder a la experiencia completa.
-2.  Selecciona un método de pensamiento y un contexto.
-3.  Describe tu situación.
-4.  Genera preguntas personalizadas para guiar tu toma de decisiones.
+## Ejecutar local
+
+```bash
+npm install
+npm run dev
+```
+
+## Variables de entorno
+
+Crear `.env.local`:
+
+```bash
+NEXT_PUBLIC_GEMINI_API_KEY=tu_api_key
+```
+
+## Deploy
+
+1. Conecta el repo en Vercel.
+2. Configura `NEXT_PUBLIC_GEMINI_API_KEY` en Project Settings.
+3. Deploy automático.
