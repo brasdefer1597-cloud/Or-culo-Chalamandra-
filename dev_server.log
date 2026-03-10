@@ -1,0 +1,13 @@
+
+> chalamandra-magistral-srap@1.0.0 dev
+> next dev
+
+  ▲ Next.js 14.2.32
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1547ms
+ ○ Compiling / ...
+ ✓ Compiled / in 3.7s (282 modules)
+ GET / 200 in 3938ms
+ GET / 200 in 18ms

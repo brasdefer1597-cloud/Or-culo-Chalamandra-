@@ -1,3 +1,7 @@
+/**
+ * Arquitectura modular: Definimos los tipos como los cimientos de una catedral digital.
+ */
+
 export type ThinkingMethod =
   | '6 Sombreros'
   | '5 Porqués'
@@ -16,4 +20,9 @@ export type ContextOption =
   | 'Cliente freelancer'
   | 'Autocuidado/bienestar';
 
-export type QuestionBank = Record<string, string[]>;
+export interface DecodedResult {
+  questions: string[];
+  method: ThinkingMethod;
+  context: ContextOption;
+  timestamp: number;
+}

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { CtaSection } from '@/components/cta/CtaSection';
 import { OracleForm } from '@/components/forms/OracleForm';
 import { Header } from '@/components/layout/Header';
@@ -7,7 +7,15 @@ import { QuestionsPanel } from '@/components/oracle/QuestionsPanel';
 import { fetchGeminiQuestions, makeFallbackQuestions } from '@/lib/oracleService';
 import type { ContextOption, ThinkingMethod } from '@/lib/types';
 
-const clarityMilestone = 3;
+const clarityMilestone = 5;
+
+const LOADING_MESSAGES = [
+  "Invocando algoritmos ancestrales...",
+  "Sintonizando frecuencias de Chalamandra...",
+  "Decodificando el caos en patrones...",
+  "Abriendo portales de claridad estratégica...",
+  "Filtrando ruidos, destilando esencia..."
+];
 
 export default function HomePage() {
   const [method, setMethod] = useState<ThinkingMethod | ''>('');
@@ -16,16 +24,34 @@ export default function HomePage() {
   const [questions, setQuestions] = useState<string[]>([]);
   const [source, setSource] = useState<'gemini' | 'fallback'>('fallback');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
   const [queryCount, setQueryCount] = useState(0);
   const [methodsUsed, setMethodsUsed] = useState<Set<string>>(new Set());
   const controllerRef = useRef<AbortController | null>(null);
 
-  const level = methodsUsed.size >= 3 ? 'Estratega' : 'Iniciado';
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isLoading) {
+      interval = setInterval(() => {
+        setLoadingMsg(LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]);
+      }, 2000);
+    }
+    return () => clearInterval(interval);
+  }, [isLoading]);
+
+  const level = useMemo(() => {
+    const size = methodsUsed.size;
+    if (size >= 5) return 'Maestro de Sifones';
+    if (size >= 3) return 'Estratega';
+    if (size >= 1) return 'Iniciado';
+    return 'Neófito';
+  }, [methodsUsed]);
+
   const clarity = useMemo(() => Math.min(100, Math.round((queryCount / clarityMilestone) * 100)), [queryCount]);
 
   const handleSubmit = async () => {
     if (!method || !context || situation.trim().length < 15) {
-      window.alert('Completa método, contexto y una situación de al menos 15 caracteres.');
+      window.alert('El Oráculo requiere: método, contexto y una descripción de al menos 15 caracteres para sintonizar.');
       return;
     }
 
@@ -43,7 +69,8 @@ export default function HomePage() {
       });
       setQuestions(generated);
       setSource('gemini');
-    } catch {
+    } catch (err) {
+      console.error("Gemini failed, using tactical backup:", err);
       setQuestions(makeFallbackQuestions(method, context));
       setSource('fallback');
     } finally {
@@ -56,10 +83,10 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>El Oráculo de Chalamandra</title>
+        <title>Chalamandra Magistral | Decodificadora SRAP</title>
         <meta
           name="description"
-          content="Herramienta interactiva para decodificar decisiones complejas con marcos de pensamiento estratégico."
+          content="Herramienta táctica de Chalamandra Magistral para decodificar decisiones complejas mediante el flujo SRAP."
         />
       </Head>
       <main className="container">
@@ -69,6 +96,7 @@ export default function HomePage() {
           context={context}
           situation={situation}
           isLoading={isLoading}
+          loadingMessage={loadingMsg}
           onMethodChange={setMethod}
           onContextChange={setContext}
           onSituationChange={setSituation}
