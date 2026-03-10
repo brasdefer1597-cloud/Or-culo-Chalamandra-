@@ -6,12 +6,15 @@ interface HeaderProps {
 export function Header({ clarity, level }: HeaderProps) {
   return (
     <header className="header">
-      <h1>EL ORÁCULO DE CHALAMANDRA</h1>
-      <p className="subtitle">Ingeniería + folklore táctico para decidir con precisión.</p>
+      <h1 className="glitch-text">CHALAMANDRA MAGISTRAL</h1>
+      <p className="subtitle">Sifón de Sabiduría & Decodificación Estratégica</p>
       <div className="statusRow">
-        <div className="levelPill">Nivel actual: <strong>{level}</strong></div>
+        <div className="levelPill">
+          <span>Rango: </span>
+          <strong>{level}</strong>
+        </div>
         <div className="clarityWrapper">
-          <span>Claridad</span>
+          <span>Sincronía</span>
           <div className="clarityTrack">
             <div className="clarityFill" style={{ width: `${clarity}%` }} />
           </div>
