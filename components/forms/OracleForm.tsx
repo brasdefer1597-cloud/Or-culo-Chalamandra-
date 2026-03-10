@@ -5,6 +5,7 @@ interface OracleFormProps {
   context: ContextOption | '';
   situation: string;
   isLoading: boolean;
+  loadingMessage?: string;
   onMethodChange: (value: ThinkingMethod | '') => void;
   onContextChange: (value: ContextOption | '') => void;
   onSituationChange: (value: string) => void;
@@ -37,6 +38,7 @@ export function OracleForm(props: OracleFormProps) {
     context,
     situation,
     isLoading,
+    loadingMessage,
     onMethodChange,
     onContextChange,
     onSituationChange,
@@ -45,11 +47,12 @@ export function OracleForm(props: OracleFormProps) {
 
   return (
     <section className="card">
-      <h2>Elige método y contexto</h2>
+      <h2 style={{ marginBottom: '24px', fontSize: '1.2rem', color: 'var(--chalamandra-gold)' }}>CONFIGURACIÓN DEL FLUJO</h2>
+
       <div className="formGroup">
-        <label htmlFor="method">Método de pensamiento</label>
+        <label htmlFor="method">Herramienta de Decodificación</label>
         <select id="method" value={method} onChange={(e) => onMethodChange(e.target.value as ThinkingMethod | '')}>
-          <option value="">Selecciona un método</option>
+          <option value="">Selecciona tu lente...</option>
           {methods.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
@@ -57,9 +60,9 @@ export function OracleForm(props: OracleFormProps) {
       </div>
 
       <div className="formGroup">
-        <label htmlFor="context">Contexto</label>
+        <label htmlFor="context">Plano de Aplicación</label>
         <select id="context" value={context} onChange={(e) => onContextChange(e.target.value as ContextOption | '')}>
-          <option value="">Selecciona un contexto</option>
+          <option value="">Define el territorio...</option>
           {contexts.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
@@ -67,17 +70,18 @@ export function OracleForm(props: OracleFormProps) {
       </div>
 
       <div className="formGroup">
-        <label htmlFor="situation">Situación</label>
+        <label htmlFor="situation">La Anomalía (Tu situación)</label>
         <textarea
           id="situation"
+          rows={4}
           value={situation}
           onChange={(e) => onSituationChange(e.target.value)}
-          placeholder="Describe tu situación en 1-2 líneas"
+          placeholder="Describe los síntomas de tu duda. Chalamandra necesita detalles para triangular..."
         />
       </div>
 
-      <button className="btn btnPrimary" disabled={isLoading} onClick={onSubmit}>
-        {isLoading ? 'DECODIFICANDO...' : 'Generar preguntas personalizadas'}
+      <button className="btn btnPrimary" style={{ width: '100%' }} disabled={isLoading} onClick={onSubmit}>
+        {isLoading ? (loadingMessage || 'PROCESANDO...') : 'INICIAR DECODIFICACIÓN'}
       </button>
     </section>
   );
