@@ -1,4 +1,4 @@
-import type { ThinkingMethod } from '../types';
+import type { ThinkingMethod } from './types';
 
 export const QUESTION_BANK: Record<ThinkingMethod, Record<string, string[]>> = {
   '6 Sombreros': {
