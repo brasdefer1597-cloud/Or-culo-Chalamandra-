@@ -1,6 +1,6 @@
 interface QuestionsPanelProps {
   questions: string[];
-  source: 'gemini' | 'fallback';
+  source: 'deepseek' | 'fallback';
 }
 
 /**
@@ -14,7 +14,7 @@ export function QuestionsPanel({ questions, source }: QuestionsPanelProps) {
       <h2 style={{ fontSize: '1.2rem', color: 'var(--chalamandra-gold)' }}>DECODIFICACIÓN FINALIZADA</h2>
       <div className="questionsBlock">
         <p className="hatTitle">
-          {source === 'fallback' ? 'Transmisión Táctica (Modo Respaldo)' : 'Sintonía de Chalamandra Magistral'}
+          {source === 'fallback' ? '◆ TRANSMISIÓN TÁCTICA (MODO RESPALDO)' : '◆ SINTONÍA DE CHALAMANDRA MAGISTRAL'}
         </p>
         <ul className="questionsList">
           {questions.map((question, index) => (
@@ -23,7 +23,7 @@ export function QuestionsPanel({ questions, source }: QuestionsPanelProps) {
         </ul>
       </div>
       {source === 'fallback' && (
-        <p style={{ fontSize: '0.8rem', opacity: 0.6, marginTop: '16px' }}>
+        <p style={{ fontSize: '0.8rem', opacity: 0.6, marginTop: '16px', fontStyle: 'italic' }}>
           * Nota: La Red Global estaba saturada; se han usado tótems locales para tu guía.
         </p>
       )}

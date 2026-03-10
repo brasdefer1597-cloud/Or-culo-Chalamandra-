@@ -1,4 +1,5 @@
-import type { ContextOption, ThinkingMethod } from '@/lib/types';
+import { THINKING_METHODS, CONTEXT_OPTIONS } from '@/lib/data/formConstants';
+import type { ContextOption, ThinkingMethod } from '@/types';
 
 interface OracleFormProps {
   method: ThinkingMethod | '';
@@ -11,26 +12,6 @@ interface OracleFormProps {
   onSituationChange: (value: string) => void;
   onSubmit: () => void;
 }
-
-const methods: ThinkingMethod[] = [
-  '6 Sombreros',
-  '5 Porqués',
-  'Disney',
-  'Paul-Elder',
-  'Covey',
-  'OODA',
-  'Árbol de decisiones',
-  'Cynefin'
-];
-
-const contexts: ContextOption[] = [
-  'Decisión laboral',
-  'Relación de pareja',
-  'Parentalidad',
-  'Ciberseguridad',
-  'Cliente freelancer',
-  'Autocuidado/bienestar'
-];
 
 export function OracleForm(props: OracleFormProps) {
   const {
@@ -53,7 +34,7 @@ export function OracleForm(props: OracleFormProps) {
         <label htmlFor="method">Herramienta de Decodificación</label>
         <select id="method" value={method} onChange={(e) => onMethodChange(e.target.value as ThinkingMethod | '')}>
           <option value="">Selecciona tu lente...</option>
-          {methods.map((item) => (
+          {THINKING_METHODS.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>
@@ -63,7 +44,7 @@ export function OracleForm(props: OracleFormProps) {
         <label htmlFor="context">Plano de Aplicación</label>
         <select id="context" value={context} onChange={(e) => onContextChange(e.target.value as ContextOption | '')}>
           <option value="">Define el territorio...</option>
-          {contexts.map((item) => (
+          {CONTEXT_OPTIONS.map((item) => (
             <option key={item} value={item}>{item}</option>
           ))}
         </select>

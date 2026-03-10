@@ -1,4 +1,4 @@
-import type { ThinkingMethod } from './types';
+import type { ThinkingMethod } from '@/types';
 
 /**
  * El Banco de Preguntas: Reservorio táctico para momentos de desconexión.
