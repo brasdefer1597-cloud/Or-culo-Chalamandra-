@@ -1,52 +1,33 @@
-# EL ORÁCULO DE CHALAMANDRA
+# 🦎 CHALAMANDRA MAGISTRAL
 
-Aplicación web en **Next.js + TypeScript** para decodificar decisiones complejas con marcos de pensamiento estratégicos.
+> **Sifón de Sabiduría & Decodificación Estratégica**
 
-## Arquitectura (limpia y lista para Vercel)
+Herramienta de Ingeniería Forense y Folklore Táctico para la toma de decisiones complejas.
 
-```txt
-/pages
-  |_ index.tsx
-  |_ demo.tsx
-  |_ _app.tsx
-/components
-  |_ layout/Header.tsx
-  |_ forms/OracleForm.tsx
-  |_ oracle/QuestionsPanel.tsx
-  |_ cta/CtaSection.tsx
-/lib
-  |_ types.ts
-  |_ questionBank.ts
-  |_ oracleService.ts
-/styles
-  |_ globals.css
-```
+## 🏺 EL MINI-FUNNEL ESTRATÉGICO
+1. **Atención:** Estética Glitch-Tribal-Gold.
+2. **Inmersión:** Selección de marcos de pensamiento (6 Sombreros, OODA, etc).
+3. **Micro-juego:** Sistema de niveles (Neófito -> Maestro de Sifones).
+4. **Valor:** Preguntas de alto impacto generadas por IA (Gemini 1.5 Flash).
+5. **Autoridad:** Metodologías probadas integradas.
+6. **Prueba:** Feedback visual de sincronía y claridad.
+7. **CTA:** Suscripción al Substack y apoyo al proyecto.
 
-## Mejoras aplicadas
+## 🏗 ARQUITECTURA ELITE (SRAP)
+- **Framework:** Next.js 14.2.32 + TypeScript.
+- **Seguridad:** Proxy de API Server-side (pages/api/decode.ts) para protección de llaves.
+- **Estado:** Hook personalizado (hooks/useOracle.ts) para lógica de negocio centralizada.
+- **UI:** Estilo Chalamandra Magistral (Gold & Black, Cinzel Typography).
+- **IA:** Integración con Google Gemini (con fallback local resiliente).
 
-- Eliminación de duplicados y legado estático (`assets/*.min.*`, HTML plano inicial).
-- Separación UI/lógica con componentes reutilizables.
-- Tipado estricto TypeScript en métodos, contextos y servicios.
-- Fallback local cuando Gemini no está disponible.
-- Proyecto preparado para despliegue directo en Vercel (`vercel.json`).
+## 🚀 EJECUCIÓN
+1. npm install
+2. npm run build
+3. npm run start
 
-## Ejecutar local
+## 🗝 VARIABLES DE ENTORNO
+Configurar en Vercel o .env.local:
+- DEEPSEEK_API_KEY: Tu llave de Gemini.
 
-```bash
-npm install
-npm run dev
-```
-
-## Variables de entorno
-
-Crear `.env.local`:
-
-```bash
-NEXT_PUBLIC_GEMINI_API_KEY=tu_api_key
-```
-
-## Deploy
-
-1. Conecta el repo en Vercel.
-2. Configura `NEXT_PUBLIC_GEMINI_API_KEY` en Project Settings.
-3. Deploy automático.
+---
+*Desarrollado con rigor técnico y misticismo estratégico.*

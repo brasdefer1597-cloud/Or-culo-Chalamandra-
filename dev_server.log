@@ -1,0 +1,15 @@
+
+> oraculo-chalamandra@1.0.0 dev
+> next dev
+
+  ▲ Next.js 14.2.32
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1647ms
+ ○ Compiling / ...
+ ✓ Compiled / in 3.3s (288 modules)
+ GET / 200 in 3541ms
+ ○ Compiling /api/decode ...
+ ✓ Compiled /api/decode in 2.3s (75 modules)
+ POST /api/decode 500 in 2312ms
