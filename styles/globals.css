@@ -62,6 +62,47 @@ select, textarea {
 .btnPrimary { background: rgba(16, 185, 129, 0.15); border-color: var(--chalamandra-green); color: var(--chalamandra-green); }
 .btnSecondary { background: rgba(148, 163, 184, 0.15); color: var(--text); border-color: var(--border); }
 
-.questionsList li { margin-bottom: 8px; }
+.questionsList {
+  list-style: none;
+  padding: 0;
+}
+
+.questionsList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+
+.questionsList li.saved span {
+  color: var(--chalamandra-green);
+  font-weight: 500;
+}
+
+.save-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--muted);
+}
+
+.save-btn:hover {
+  color: var(--text);
+}
+
+.bookmark-icon {
+  transition: all 0.2s ease-in-out;
+}
+
+.error-message {
+  color: #f87171; /* Un rojo claro */
+  margin-top: 10px;
+  text-align: center;
+}
+
+
 .hatTitle { color: var(--chalamandra-green); font-weight: 700; }
 .ctaButtons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }

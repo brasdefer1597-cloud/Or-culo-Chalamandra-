@@ -5,6 +5,7 @@ interface OracleFormProps {
   context: ContextOption | '';
   situation: string;
   isLoading: boolean;
+  error: string | null;
   onMethodChange: (value: ThinkingMethod | '') => void;
   onContextChange: (value: ContextOption | '') => void;
   onSituationChange: (value: string) => void;
@@ -37,6 +38,7 @@ export function OracleForm(props: OracleFormProps) {
     context,
     situation,
     isLoading,
+    error,
     onMethodChange,
     onContextChange,
     onSituationChange,
@@ -75,6 +77,8 @@ export function OracleForm(props: OracleFormProps) {
           placeholder="Describe tu situación en 1-2 líneas"
         />
       </div>
+
+      {error && <p className="error-message">{error}</p>}
 
       <button className="btn btnPrimary" disabled={isLoading} onClick={onSubmit}>
         {isLoading ? 'DECODIFICANDO...' : 'Generar preguntas personalizadas'}

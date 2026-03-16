@@ -1,8 +1,9 @@
 import { QUESTION_BANK } from './questionBank';
 import type { ThinkingMethod } from './types';
 
-const GEMINI_MODEL = 'gemini-1.5-flash';
-
+/**
+ * Parsea un string con preguntas separadas por saltos de línea a un array de strings.
+ */
 export function parseQuestionLines(text: string): string[] {
   return text
     .split('\n')
@@ -12,6 +13,9 @@ export function parseQuestionLines(text: string): string[] {
     .slice(0, 7);
 }
 
+/**
+ * Genera preguntas de respaldo locales como fallback si la API falla.
+ */
 export function makeFallbackQuestions(method: ThinkingMethod, context: string): string[] {
   const bank = QUESTION_BANK[method];
 
@@ -23,66 +27,10 @@ export function makeFallbackQuestions(method: ThinkingMethod, context: string): 
     return localQuestions.slice(0, 6);
   }
 
+  // Fallback de último recurso si todo lo demás falla.
   return [
     `¿Cuál es el criterio de éxito para "${context}"?`,
     '¿Qué riesgo crítico no estás midiendo?',
     '¿Qué micro-acción en 72h validará tu decisión?'
   ];
-}
-
-export async function fetchGeminiQuestions(params: {
-  method: ThinkingMethod;
-  context: string;
-  situation: string;
-  signal: AbortSignal;
-}): Promise<string[]> {
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('MISSING_API_KEY');
-  }
-
-  const { method, context, situation, signal } = params;
-
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [
-            {
-              text: 'Eres la Sabiduría de Chalamandra: guía estratégica, clara y accionable. Entrega solo preguntas de alto impacto.'
-            }
-          ]
-        },
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              {
-                text: `Método: ${method}\nContexto: ${context}\nSituación: ${situation}`
-              }
-            ]
-          }
-        ]
-      }),
-      signal
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`GEMINI_${response.status}`);
-  }
-
-  const data = await response.json();
-  const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-  const parsed = parseQuestionLines(raw);
-
-  if (!parsed.length) {
-    throw new Error('EMPTY_RESPONSE');
-  }
-
-  return parsed;
 }
