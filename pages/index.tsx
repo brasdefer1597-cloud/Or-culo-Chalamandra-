@@ -1,84 +1,76 @@
+import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import { useMemo, useState } from 'react';
-import { CtaSection } from '@/components/cta/CtaSection';
-import { OracleForm } from '@/components/forms/OracleForm';
-import { Header } from '@/components/layout/Header';
-import { QuestionsPanel } from '@/components/oracle/QuestionsPanel';
-import { makeFallbackQuestions } from '@/lib/oracleService';
-import { fetchGeneratedQuestions } from '@/lib/api';
-import type { ContextOption, ThinkingMethod } from '@/lib/types';
+import { questionBank } from '../lib/questionBank';
+import { StrategicMethod, Question } from '../lib/types';
+import { useOracle } from '../hooks/useOracle';
+import { Header } from '../components/Header';
+import { MethodSelector } from '../components/MethodSelector';
+import { QuestionDisplay } from '../components/QuestionDisplay';
+import { Footer } from '../components/Footer';
 
-const CLARITY_MILESTONE = 3;
+interface HomeProps {
+  methods: StrategicMethod[];
+}
 
-export default function HomePage() {
-  const [method, setMethod] = useState<ThinkingMethod | ''>('');
-  const [context, setContext] = useState<ContextOption | ''>('');
-  const [situation, setSituation] = useState('');
-  const [questions, setQuestions] = useState<string[]>([]);
-  const [source, setSource] = useState<'gemini' | 'fallback'>('fallback');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [queryCount, setQueryCount] = useState(0);
-  const [methodsUsed, setMethodsUsed] = useState<Set<string>>(new Set());
-
-  const level = methodsUsed.size >= 3 ? 'Estratega' : 'Iniciado';
-  const clarity = useMemo(() => Math.min(100, Math.round((queryCount / CLARITY_MILESTONE) * 100)), [queryCount]);
-
-  const handleSubmit = async () => {
-    if (!method || !context || situation.trim().length < 15) {
-      setError('Por favor, completa todos los campos. La situación debe tener al menos 15 caracteres.');
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const generated = await fetchGeneratedQuestions(method, context, situation.trim());
-      setQuestions(generated);
-      setSource('gemini');
-    } catch (apiError) {
-      console.error('API Error:', apiError);
-      setQuestions(makeFallbackQuestions(method, context));
-      setSource('fallback');
-      setError('No se pudieron generar las preguntas. Usando preguntas de respaldo.');
-    } finally {
-      setQueryCount((value) => value + 1);
-      setMethodsUsed((prev) => new Set(prev).add(method));
-      setIsLoading(false);
-    }
-  };
+const Home: NextPage<HomeProps> = ({ methods }) => {
+  const {
+    selectedMethod,
+    setSelectedMethod,
+    generatedQuestions,
+    isLoading,
+    error,
+    handleGenerate,
+  } = useOracle(methods);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen bg-gray-900 text-white font-sans">
       <Head>
-        <title>El Oráculo de Chalamandra</title>
-        <meta
-          name="description"
-          content="Herramienta interactiva para decodificar decisiones complejas con marcos de pensamiento estratégico."
-        />
+        <title>Oráculo Chalamandra</title>
+        <meta name="description" content="Generador de preguntas estratégicas con IA" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="container">
-        <Header clarity={clarity} level={level} />
-        <OracleForm
-          method={method}
-          context={context}
-          situation={situation}
-          isLoading={isLoading}
-          error={error} // Pasar el error al formulario
-          onMethodChange={setMethod}
-          onContextChange={setContext}
-          onSituationChange={setSituation}
-          onSubmit={handleSubmit}
-        />
-        <QuestionsPanel 
-          questions={questions} 
-          source={source} 
-          method={method}
-          context={context}
-        />
-        {questions.length > 0 && <CtaSection />}
+
+      <Header />
+
+      <main className="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
+        <p className="text-center text-lg md:text-xl text-gray-400 mb-8 max-w-3xl">
+          Selecciona un modelo estratégico y presiona "Generar" para que la IA cree 5 nuevas preguntas poderosas para tu situación específica.
+        </p>
+
+        {methods.length > 0 && selectedMethod && (
+          <MethodSelector
+            methods={methods}
+            selectedMethod={selectedMethod}
+            setSelectedMethod={setSelectedMethod}
+          />
+        )}
+
+        <button
+          onClick={handleGenerate}
+          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 disabled:bg-gray-700 disabled:cursor-not-allowed shadow-lg my-8"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Generando...' : 'Generar Preguntas'}
+        </button>
+
+        {error && <p className="text-red-500 mt-4 text-center">Error: {error}</p>}
+
+        <QuestionDisplay questions={generatedQuestions} />
       </main>
-    </>
+
+      <Footer />
+    </div>
   );
-}
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  // Cargar solo los nombres y descripciones para el props inicial, las preguntas se generan on-demand
+  const methods = questionBank.map(({ name, description }) => ({ name, description, questions: [] }));
+  return {
+    props: {
+      methods,
+    },
+  };
+};
+
+export default Home;

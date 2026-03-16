@@ -1,6 +1,8 @@
 
-import { sql } from '@neondatabase/serverless';
+import { neon } from '@neondatabase/serverless';
 import { NextApiRequest, NextApiResponse } from 'next';
+
+const sql = neon(process.env.DATABASE_URL!);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -8,13 +10,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const query = `
+    const rows = await sql`
       SELECT question_text, method, context, saves, last_saved_at
       FROM chalamandra_feedback
       WHERE saves > 0
       ORDER BY last_saved_at DESC;
     `;
-    const { rows } = await sql.query(query);
     
     res.status(200).json({ favorites: rows });
 

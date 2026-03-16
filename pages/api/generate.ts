@@ -1,107 +1,70 @@
-import { sql } from '@neondatabase/serverless';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import crypto from 'crypto';
+import { questionBank } from '../../lib/questionBank';
+import { Question } from '../../lib/types';
 
-const CHALAMANDRA_SYSTEM_INSTRUCTION = 'Eres la Sabiduría de Chalamandra: guía estratégica, clara y accionable. Entrega solo preguntas de alto impacto.';
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
-// --- Helper Functions ---
+// Cache para el modelo generativo
+const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-async function getTopRatedQuestions(method: string, context: string): Promise<string[]> {
-  try {
-    const query = `
-      SELECT question_text 
-      FROM chalamandra_feedback
-      WHERE method = $1 AND context = $2 AND saves > 0
-      ORDER BY saves DESC, last_saved_at DESC
-      LIMIT 3;
-    `;
-    const { rows } = await sql.query(query, [method, context]);
-    return rows.map((r: { question_text: string }) => r.question_text);
-  } catch (error) {
-    console.error("Error fetching top rated questions:", error);
-    return []; // Si falla, continuamos sin ejemplos
-  }
-}
-
-function createQuestionHash(question: string, method: string, context: string): string {
-  const hash = crypto.createHash('sha256');
-  hash.update(question + method + context);
-  return hash.digest('hex');
-}
-
-// "Fire-and-forget" para no retrasar la respuesta al usuario.
-async function updateImpressions(questions: string[], method: string, context: string) {
-  if (questions.length === 0) return;
-
-  const hashes = questions.map(q => createQuestionHash(q, method, context));
-  
-  try {
-    const query = `
-      UPDATE chalamandra_feedback
-      SET impressions = impressions + 1
-      WHERE question_hash = ANY($1::text[]);
-    `;
-    await sql(query, [hashes]);
-    console.log(`Updated impressions for ${hashes.length} questions.`);
-  } catch (error) {
-    console.error("Error updating impressions:", error);
-  }
-}
-
-// --- API Handler ---
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
   }
 
-  const { method, context, situation } = req.body;
+  const { method } = req.body;
 
-  if (!method || !context || !situation) {
-    return res.status(400).json({ error: 'Missing required fields: method, context, or situation' });
+  if (typeof method !== 'string') {
+    return res.status(400).json({ message: 'El parámetro "method" debe ser un string.' });
   }
 
-  // 1. OBTENER PREGUNTAS DE ALTO RENDIMIENTO (FEEDBACK LOOP)
-  const topQuestions = await getTopRatedQuestions(method, context);
-  let examplesSection = '';
-  if (topQuestions.length > 0) {
-    const exampleList = topQuestions.map(q => `- ${q}`).join('\n');
-    examplesSection = `--- \
-Ejemplos de preguntas excelentes previamente guardadas por usuarios: \
-${exampleList} \
---- \
-`;
+  const selectedMethod = questionBank.find((m) => m.name === method);
+
+  if (!selectedMethod) {
+    return res.status(404).json({ message: `Método "${method}" no encontrado.` });
   }
 
   try {
-    // 2. CONSTRUIR Y EJECUTAR EL PROMPT ENRIQUECIDO
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const prompt = `
-      ${examplesSection}
-      Método: ${method}\
-      Contexto: ${context}\
-      Situación: ${situation}\
-      \
-      Genera 5 preguntas poderosas basadas en esto.
-    `;
+    const prompt = `Actúa como un estratega de élite y genera una lista de 5 preguntas únicas y poderosas basadas en el método "${selectedMethod.name}".
+    Descripción del método: ${selectedMethod.description}.
+    Las preguntas deben ser concisas, provocadoras y directamente aplicables para resolver un problema complejo.
+    NO repitas las preguntas de ejemplo. Sé creativo y genera variaciones completamente nuevas.
+    Ejemplos (para que no los repitas): ${JSON.stringify(selectedMethod.questions)}
+    Formato de salida: solo un array JSON de 5 strings. Ejemplo: ["pregunta 1", "pregunta 2", ...].`;
 
-    const result = await model.generateContent([CHALAMANDRA_SYSTEM_INSTRUCTION, prompt]);
+    const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
-    const generatedQuestions = text.split('\n').map(q => q.replace(/^\d+\.\s*/, '').trim()).filter(q => q.length > 0);
+    // Limpieza y parseo de la respuesta para asegurar que es un JSON válido.
+    let questionsArray: string[];
+    try {
+        // Intenta encontrar un array JSON dentro del texto, que a veces viene con markdown
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) {
+            throw new Error("No se encontró un array JSON en la respuesta de la IA.");
+        }
+        questionsArray = JSON.parse(jsonMatch[0]);
 
-    // 3. REGISTRAR IMPRESIONES (ASÍNCRONO)
-    // No esperamos a que termine para no penalizar la latencia.
-    updateImpressions(generatedQuestions, method, context);
+        if (!Array.isArray(questionsArray) || !questionsArray.every(q => typeof q === 'string')) {
+            throw new Error('El formato del array de preguntas no es válido.');
+        }
 
-    res.status(200).json({ questions: generatedQuestions, source: 'gemini' });
+    } catch (e) {
+        console.error("Error al parsear la respuesta de la IA:", text, e);
+        return res.status(500).json({ message: 'La IA generó una respuesta con formato inesperado.' });
+    }
 
+    const formattedQuestions: Question[] = questionsArray.map((q, i) => ({ id: i + 1, text: q }));
+
+    res.status(200).json({ questions: formattedQuestions });
+  
   } catch (error) {
-    console.error('Error calling Gemini API:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to generate questions';
-    res.status(500).json({ error: errorMessage });
+    console.error('Error al conectar con la API de Google Generative AI:', error);
+    res.status(500).json({ message: 'Error interno del servidor al generar preguntas.' });
   }
-}
+};
+
+export default handler;
