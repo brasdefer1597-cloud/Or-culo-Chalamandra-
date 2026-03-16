@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import { questionBank } from '../lib/questionBank';
-import { StrategicMethod, Question } from '../lib/types';
+import { StrategicMethod } from '../lib/types';
 import { useOracle } from '../hooks/useOracle';
 import { Header } from '../components/Header';
 import { MethodSelector } from '../components/MethodSelector';
@@ -34,7 +34,7 @@ const Home: NextPage<HomeProps> = ({ methods }) => {
 
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
         <p className="text-center text-lg md:text-xl text-gray-400 mb-8 max-w-3xl">
-          Selecciona un modelo estratégico y presiona "Generar" para que la IA cree 5 nuevas preguntas poderosas para tu situación específica.
+          Selecciona un modelo estratégico y presiona &quot;Generar&quot; para que la IA cree 5 nuevas preguntas poderosas para tu situación específica.
         </p>
 
         {methods.length > 0 && selectedMethod && (

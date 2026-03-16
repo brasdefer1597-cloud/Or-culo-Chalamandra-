@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { questionBank } from '../../lib/questionBank';
-import { Question } from '../../lib/types';
+import { QUESTION_BANK } from '../../lib/questionBank';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -20,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ message: 'El parámetro "method" debe ser un string.' });
   }
 
-  const selectedMethod = questionBank.find((m) => m.name === method);
+  const selectedMethod = QUESTION_BANK.find((m) => m.name === method);
 
   if (!selectedMethod) {
     return res.status(404).json({ message: `Método "${method}" no encontrado.` });
@@ -57,9 +56,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).json({ message: 'La IA generó una respuesta con formato inesperado.' });
     }
 
-    const formattedQuestions: Question[] = questionsArray.map((q, i) => ({ id: i + 1, text: q }));
-
-    res.status(200).json({ questions: formattedQuestions });
+    res.status(200).json({ questions: questionsArray });
   
   } catch (error) {
     console.error('Error al conectar con la API de Google Generative AI:', error);
