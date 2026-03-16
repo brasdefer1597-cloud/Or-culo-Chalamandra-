@@ -1,12 +1,12 @@
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import { questionBank } from '../lib/questionBank';
-import { StrategicMethod } from '../lib/types';
+import { QUESTION_BANK } from '../lib/questionBank';
 import { useOracle } from '../hooks/useOracle';
-import { Header } from '../components/Header';
-import { MethodSelector } from '../components/MethodSelector';
-import { QuestionDisplay } from '../components/QuestionDisplay';
-import { Footer } from '../components/Footer';
+import { Header } from '../components/layout/Header';
+import { MethodSelector } from '../components/forms/MethodSelector'; // Importación corregida
+import { QuestionsPanel } from '../components/oracle/QuestionsPanel';
+import { Footer } from '../components/layout/Footer';
+import { StrategicMethod } from '../lib/types';
 
 interface HomeProps {
   methods: StrategicMethod[];
@@ -22,6 +22,9 @@ const Home: NextPage<HomeProps> = ({ methods }) => {
     handleGenerate,
   } = useOracle(methods);
 
+  const initialClarity = 0;
+  const initialLevel = "Explorador";
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900 text-white font-sans">
       <Head>
@@ -30,7 +33,7 @@ const Home: NextPage<HomeProps> = ({ methods }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
+      <Header clarity={initialClarity} level={initialLevel} />
 
       <main className="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
         <p className="text-center text-lg md:text-xl text-gray-400 mb-8 max-w-3xl">
@@ -55,7 +58,7 @@ const Home: NextPage<HomeProps> = ({ methods }) => {
 
         {error && <p className="text-red-500 mt-4 text-center">Error: {error}</p>}
 
-        <QuestionDisplay questions={generatedQuestions} />
+        <QuestionsPanel questions={generatedQuestions} />
       </main>
 
       <Footer />
@@ -63,12 +66,10 @@ const Home: NextPage<HomeProps> = ({ methods }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  // Cargar solo los nombres y descripciones para el props inicial, las preguntas se generan on-demand
-  const methods = questionBank.map(({ name, description }) => ({ name, description, questions: [] }));
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   return {
     props: {
-      methods,
+      methods: QUESTION_BANK,
     },
   };
 };

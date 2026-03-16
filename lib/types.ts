@@ -23,3 +23,18 @@ export interface FavoriteQuestion {
   saves: number;
   last_saved_at: string; 
 }
+
+// --- Definiciones Canónicas ---
+
+// Define la estructura de una sola pregunta de ejemplo.
+export interface Question {
+  id: number;
+  text: string;
+}
+
+// Define la estructura de un método estratégico completo.
+export interface StrategicMethod {
+  name: ThinkingMethod;
+  description: string;
+  questions: Question[];
+}

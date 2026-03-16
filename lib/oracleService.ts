@@ -17,17 +17,25 @@ export function parseQuestionLines(text: string): string[] {
  * Genera preguntas de respaldo locales como fallback si la API falla.
  */
 export function makeFallbackQuestions(method: ThinkingMethod, context: string): string[] {
-  const bank = QUESTION_BANK[method];
+  const selectedMethod = QUESTION_BANK.find((m) => m.name === method);
 
-  const localQuestions = Object.values(bank)
-    .flatMap((questions) => questions)
-    .map((question) => question.replace('[contexto]', context));
+  if (!selectedMethod) {
+    // Fallback de último recurso si el método no se encuentra.
+    return [
+      `¿Cuál es el criterio de éxito para "${context}"?`,
+      '¿Qué riesgo crítico no estás midiendo?',
+      '¿Qué micro-acción en 72h validará tu decisión?'
+    ];
+  }
+
+  const localQuestions = selectedMethod.questions
+    .map((q) => q.text.replace('[contexto]', context));
 
   if (localQuestions.length) {
     return localQuestions.slice(0, 6);
   }
 
-  // Fallback de último recurso si todo lo demás falla.
+  // Fallback por si el método no tiene preguntas.
   return [
     `¿Cuál es el criterio de éxito para "${context}"?`,
     '¿Qué riesgo crítico no estás midiendo?',
