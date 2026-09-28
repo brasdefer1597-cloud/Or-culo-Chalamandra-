@@ -85,6 +85,7 @@ Nuestra visión integra la precisión forense del diagnóstico de software con l
 ¿Listo para transformar tu proceso decisional y experimentar la metodología **decoX**?
 
 👉 **[Acceder al Oráculo Chalamandra en Vivo](https://oraculo-chalamandra.vercel.app/)**
+👉 **[Repositorio Oficial en GitHub](https://github.com/Chalamandra-Magistral-deco/Oracula-Chalamandra)**
 
 ---
 
@@ -92,6 +93,7 @@ Nuestra visión integra la precisión forense del diagnóstico de software con l
 
 Para consultorías personalizadas, implementación de la metodología **decoX** en tu organización o integración de soluciones a medida por **Chalamandra Magistral**:
 
-- 🌐 **Plataforma:** [Chalamandra Oráculo](https://oraculo-chalamandra.vercel.app/)
+- 🌐 **Organización GitHub:** [Chalamandra-Magistral-deco](https://github.com/Chalamandra-Magistral-deco)
+- ✉️ **Contacto:** decoxmagistral@gmail.com
 - 💼 **Soluciones Corporativas:** Chalamandra Magistral / decoX
 - 🔒 **Garantía:** Compatibilidad con altos estándares de arquitectura, privacidad y rendimiento.
