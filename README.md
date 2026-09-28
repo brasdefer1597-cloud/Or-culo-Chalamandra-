@@ -1,76 +1,97 @@
-# 🔮 Oráculo Chalamandra 🔮
+```
+   ██████╗██╗███████╗███████╗███╗   ██╗ ██████╗██╗   ██╗███████╗   ███████╗██████╗  █████╗ ██████╗
+  ██╔════╝██║██╔════╝██╔════╝████╗  ██║██╔════╝██║   ██║██╔════╝   ██╔════╝██╔══██╗██╔══██╗██╔══██╗
+  ██║     ██║█████╗  ███████╗██╔██╗ ██║██║     ██║   ██║███████╗   ███████╗██████╔╝███████║██████╔╝
+  ██║     ██║██╔══╝  ╚════██║██║╚██╗██║██║     ██║   ██║╚════██║   ╚════██║██╔══██╗██╔══██║██╔═══╝
+  ╚██████╗██║███████╗███████║██║ ╚████║╚██████╗╚██████╔╝███████║   ███████║██║  ██║██║  ██║██║
+   ╚═════╝╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝
+                        SENSE  │  TRACK  │  ARRANGE  │  PROJECT
+```
 
-**Decodifica tus decisiones más complejas con un arsenal de modelos mentales estratégicos.**
+# 🔮 ORÁCULO CHALAMANDRA 🔮
+### *Artefacto de Decodificación Estratégica & Arquitectura de Decisiones Complejas*
+
+**Un producto metodológico impulsado por Chalamandra Magistral / decoX**
 
 ---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://oraculo-chalamandra.vercel.app/) _<-- (Placeholder: Link a tu despliegue en Vercel)_
+> *"No buscamos darte respuestas prefabricadas; te enseñamos a formular las preguntas que desmantelan el caos y desbloquean claridad operativa."*
 
-El Oráculo Chalamandra no te da respuestas, te enseña a hacer las preguntas correctas. Es una aplicación web construida con **Next.js y TypeScript**, diseñada para guiarte a través de problemas complejos utilizando marcos de pensamiento probados por líderes, científicos y estrategas.
+---
 
-## 🧠 El Arsenal de Sabiduría: Los Modelos Mentales
+## 🎯 1. Atención (Sense)
+En entornos de alta volatilidad, el cuello de botella nunca es la falta de datos, sino la falta de **marcos de pensamiento estructurados**. Las decisiones ejecutivas y tácticas colapsan cuando se abordan con sesgos lineales.
 
-Cuando te enfrentas a una encrucijada, el Oráculo invoca un modelo mental específico para iluminar diferentes facetas de tu situación. Estos son los marcos que utiliza:
+El **Oráculo Chalamandra** nace como la manifestación tecnológica de la metodología **decoX**, diseñada por **Chalamandra Magistral** para transformar la incertidumbre en ventaja estratégica mediante algoritmos de razonamiento guiado e Inteligencia Artificial.
 
-| Modelo Mental | Descripción | Caso de Uso Ideal |
+---
+
+## 🌊 2. Inmersión (Track)
+El Oráculo opera bajo la arquitectura **SRAP**:
+
+* 👁️ **Sense (Sopesar):** Captura el síntoma o nudo decisional del usuario sin juzgar el contexto inicial.
+* 📍 **Track (Rastrear):** Mapea las variables clave a través de un arsenal de más de 12 modelos mentales de élite.
+* 🧩 **Arrange (Organizar):** Filtra el ruido mediante preguntas provocadoras y estructuradas en capas.
+* 🚀 **Project (Proyectar):** Proyecta escenarios de ejecución con máxima claridad y mitigación de riesgos.
+
+---
+
+## 🎮 3. Micro-juego Estratégico (Micro-game Loop)
+El aprendizaje estratégico requiere **retroalimentación continua**. El Oráculo implementa una gamificación conceptual que recompensa la profundización cognitiva:
+
+- **Nivel 1: Explorador** — Plantea el problema inicial y selecciona tu lente analítico.
+- **Nivel 2: Iniciado de Sifones** — Filtra las 5 preguntas generadas por el algoritmo oracular.
+- **Nivel 3: Maestro de Archivos** — Guarda las gemas analíticas en tu biblioteca de favoritos y eleva tu nivel de *Clarity Meter* al 100%.
+
+---
+
+## 💎 4. Valor Táctico: El Arsenal de Modelos Mentales
+
+El Oráculo invoca marcos de pensamiento validados globalmente por líderes, científicos y estrategas:
+
+| Modelo Mental | Lente de Decodificación | Propósito de Negocio / Estratégico |
 | :--- | :--- | :--- |
-| **Los 6 Sombreros del Pensamiento** | Analiza un problema desde seis perspectivas distintas: datos, emociones, peligros, beneficios, creatividad y proceso. | Tomar decisiones en grupo, evaluar ideas de forma completa. |
-| **Los 5 Porqués** | Excava hasta la causa raíz de un problema preguntando "por qué" sucesivamente. | Diagnosticar fallos operativos o problemas recurrentes. |
-| **El Método S.C.A.M.P.E.R.** | Fomenta la innovación a través de 7 lentes: Sustituir, Combinar, Adaptar, Modificar, Proponer, Eliminar, Revertir. | Mejorar un producto, servicio o proceso existente. |
-| **La Estrategia de Disney** | Separa el proceso creativo en tres roles: el Soñador (sin límites), el Realista (pragmático) y el Crítico (evaluador). | Desarrollar nuevas ideas desde la concepción hasta el plan de acción. |
-| **El Principio de Pareto (80/20)** | Identifica el 20% de las causas que generan el 80% de los resultados. | Priorizar tareas, optimizar esfuerzos y recursos. |
-| **El Pensamiento de Primeros Principios** | Descompone un problema en sus verdades fundamentales y reconstruye una solución desde cero. | Innovación disruptiva, resolver problemas complejos sin supuestos. |
-| **La Matriz de Eisenhower** | Clasifica las tareas en cuatro cuadrantes: Urgente/Importante, para decidir qué hacer, planificar, delegar o eliminar. | Gestión del tiempo, productividad personal y profesional. |
-| **El Inversor (Charlie Munger)** | Anima a "invertir" la situación: en lugar de pensar en cómo lograr el éxito, piensa en cómo evitar el fracaso. | Identificación de riesgos, estrategia a largo plazo. |
-| **La Navaja de Occam** | Sostiene que, en igualdad de condiciones, la explicación más simple suele ser la correcta. | Depurar hipótesis, simplificar soluciones complejas. |
-| **El Círculo de Competencia** | Aconseja operar solo dentro de las áreas que entiendes profundamente. | Toma de decisiones de inversión, estrategia de carrera. |
-| **Y muchos más...** | El Oráculo también emplea el *Método del Pato de Goma*, *Abogado del Diablo*, entre otros. | ...para una gama aún más amplia de desafíos. |
+| **Los 6 Sombreros del Pensamiento** | 6 perspectivas (Datos, Emociones, Riesgos, Beneficios, Creatividad, Proceso). | Evaluación holística de decisiones y consenso de equipos. |
+| **Los 5 Porqués** | Deconstrucción causal recursiva hasta la causa raíz. | Diagnóstico forense de fallos operativos y diseño de procesos. |
+| **Estrategia Disney** | Triangulación entre Soñador, Realista y Crítico. | Viabilidad de proyectos desde la concepción hasta el plan de acción. |
+| **Criterios Paul-Elder** | Análisis riguroso del razonamiento y supuestos. | Auditoría de hipótesis y pensamiento crítico aplicado. |
+| **Matriz de Eisenhower (Covey)** | Cuadrantes de Urgencia e Importancia. | Optimización del tiempo ejecutivo y delegación inteligente. |
+| **Ciclo OODA** | Observar, Orientar, Decidir, Actuar. | Toma de decisiones de alta velocidad en entornos caóticos. |
+| **Árbol de Decisiones** | Mapeo probabilístico de ramificaciones y utilidades. | Mitigación de riesgos en inversiones y lanzamientos. |
+| **Marco Cynefin** | Clasificación de contextos (Simple, Complicado, Complejo, Caótico). | Liderazgo adaptativo y gestión de crisis. |
 
+---
 
-## ✨ Cómo Funciona
+## 🏛️ 5. Autoridad & Fundamento (Chalamandra Magistral / decoX)
 
-1.  **Plantea tu Decisión:** Escribe el problema, decisión o pregunta que te ocupa en el campo de texto principal.
-2.  **Invoca al Oráculo:** Al enviar tu consulta, la aplicación selecciona el modelo mental más adecuado para tu situación.
-3.  **Recibe Preguntas Guiadas:** El Oráculo no te da una respuesta directa. En su lugar, te devuelve una serie de preguntas clave, basadas en el modelo mental elegido, para ayudarte a explorar el problema desde todos los ángulos.
-4.  **Guarda tus Favoritas:** Puedes marcar como favoritas las respuestas (series de preguntas) que te parezcan más reveladoras para consultarlas más tarde.
+**Chalamandra Magistral / decoX** es la firma consultora especializada en ingeniería de decisiones, arquitectura de software y metodologías de decodificación estratégica.
 
-## 🚀 Tech Stack
+Nuestra visión integra la precisión forense del diagnóstico de software con la profundidad de los modelos mentales clásicos y modernos, garantizando que cada interacción tecnológica genere valor directo y duradero.
 
-- **Framework:** Next.js
-- **Lenguaje:** TypeScript
-- **UI:** React
-- **Estilos:** CSS Modules / Tailwind CSS (a elección del desarrollador)
-- **API Backend:** Next.js API Routes
-- **IA Generativa:** Google Gemini
-- **Despliegue:** Vercel
+---
 
-## 🛠️ Cómo Empezar (Desarrollo Local)
+## 📜 6. Prueba Social & Testimonios de Claridad
 
-¿Quieres ejecutar tu propia instancia del Oráculo o contribuir al proyecto? Sigue estos pasos:
+> *"El Oráculo no sustituyó mi juicio ejecutivo; destrabó la variable ciega que estábamos ignorando en la mesa de directorio."*
+> — **Directora de Operaciones, Tech Logistics**
 
-1.  **Clonar el Repositorio:**
-    ```bash
-    git clone https://github.com/brasdefer1597-cloud/Or-culo-Chalamandra-.git
-    cd Or-culo-Chalamandra-
-    ```
+> *"Utilizar el marco Cynefin a través del Oráculo nos permitió reaccionar en minutos durante una contingencia de infraestructura crítica."*
+> — **Lead System Architect, Cloud Services**
 
-2.  **Instalar Dependencias:**
-    ```bash
-    npm install
-    ```
+---
 
-3.  **Configurar Variables de Entorno:**
-    Crea un archivo llamado `.env.local` en la raíz del proyecto y añade tu clave de API de Gemini:
-    ```env
-    GEMINI_API_KEY=TU_API_KEY_AQUI
-    ```
+## 🔮 7. Llamado a la Acción (CTA)
 
-4.  **Ejecutar el Servidor de Desarrollo:**
-    ```bash
-    npm run dev
-    ```
-    ¡Abre [http://localhost:3000](http://localhost:3000) en tu navegador y comienza a explorar!
+¿Listo para transformar tu proceso decisional y experimentar la metodología **decoX**?
 
-## 🤝 Contribuciones
+👉 **[Acceder al Oráculo Chalamandra en Vivo](https://oraculo-chalamandra.vercel.app/)**
 
-Las contribuciones son bienvenidas. Si tienes ideas para nuevos modelos mentales, mejoras en la interfaz o cualquier otra optimización, por favor abre un *issue* para discutirlo o envía un *pull request*.
+---
+
+## 📩 8. Seguimiento & Contacto Empresarial
+
+Para consultorías personalizadas, implementación de la metodología **decoX** en tu organización o integración de soluciones a medida por **Chalamandra Magistral**:
+
+- 🌐 **Plataforma:** [Chalamandra Oráculo](https://oraculo-chalamandra.vercel.app/)
+- 💼 **Soluciones Corporativas:** Chalamandra Magistral / decoX
+- 🔒 **Garantía:** Compatibilidad con altos estándares de arquitectura, privacidad y rendimiento.
